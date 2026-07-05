@@ -92,15 +92,9 @@ export function Navbar() {
     // Find the target element
     const element = document.getElementById(id);
     if (element) {
-      // Calculate scroll position with offset for fixed header
-      const headerOffset = 90; // height of navbar with padding
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      setTimeout(() => {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
     }
   };
 
@@ -233,7 +227,7 @@ export function Navbar() {
                   key={link.name} 
                   href={link.href}
                   onClick={(e) => scrollToSection(e, link.href)}
-                  className="text-sm font-medium text-slate-300 hover:text-white transition-colors py-2 border-b border-white/5 cursor-pointer"
+                  className="text-sm font-medium text-slate-300 hover:text-white transition-colors py-2 border-b border-white/5 cursor-pointer text-center"
                 >
                   {link.name}
                 </a>
@@ -244,7 +238,7 @@ export function Navbar() {
                   // Trigger opening the ThemeSettings sliding sidebar panel
                   window.dispatchEvent(new CustomEvent('open-theme-settings'));
                 }}
-                className="flex items-center gap-2 text-sm font-semibold text-theme-p-400 hover:text-white transition-colors py-2 border-b border-white/5 text-left cursor-pointer"
+                className="flex items-center justify-center gap-2 text-sm font-semibold text-theme-p-400 hover:text-white transition-colors py-2 border-b border-white/5 text-center cursor-pointer"
               >
                 <Settings size={16} className="text-theme-p-400 animate-pulse" />
                 Theme & Settings Center
@@ -254,7 +248,7 @@ export function Navbar() {
                   generateResume(portfolioData);
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white transition-colors py-2 border-b border-white/5 text-left cursor-pointer"
+                className="flex items-center justify-center gap-2 text-sm font-medium text-slate-300 hover:text-white transition-colors py-2 border-b border-white/5 text-center cursor-pointer"
               >
                 <Download size={16} />
                 Download Resume

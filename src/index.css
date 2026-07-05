@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+:root {
+  --theme-p-300: var(--color-indigo-300);
+  --theme-p-400: var(--color-indigo-400);
+  --theme-p-500: var(--color-indigo-500);
+  --theme-p-600: var(--color-indigo-600);
+  --theme-p-900: var(--color-indigo-900);
+
+  --theme-s-400: var(--color-purple-400);
+  --theme-s-500: var(--color-purple-500);
+  --theme-s-600: var(--color-purple-600);
+  --theme-s-900: var(--color-purple-900);
+}
+
+[data-theme="emerald"] {
+  --theme-p-300: var(--color-emerald-300);
+  --theme-p-400: var(--color-emerald-400);
+  --theme-p-500: var(--color-emerald-500);
+  --theme-p-600: var(--color-emerald-600);
+  --theme-p-900: var(--color-emerald-900);
+
+  --theme-s-400: var(--color-teal-400);
+  --theme-s-500: var(--color-teal-500);
+  --theme-s-600: var(--color-teal-600);
+  --theme-s-900: var(--color-teal-900);
+}
+
+[data-theme="rose"] {
+  --theme-p-300: var(--color-rose-300);
+  --theme-p-400: var(--color-rose-400);
+  --theme-p-500: var(--color-rose-500);
+  --theme-p-600: var(--color-rose-600);
+  --theme-p-900: var(--color-rose-900);
+
+  --theme-s-400: var(--color-orange-400);
+  --theme-s-500: var(--color-orange-500);
+  --theme-s-600: var(--color-orange-600);
+  --theme-s-900: var(--color-orange-900);
+}
+
+[data-theme="blue"] {
+  --theme-p-300: var(--color-blue-300);
+  --theme-p-400: var(--color-blue-400);
+  --theme-p-500: var(--color-blue-500);
+  --theme-p-600: var(--color-blue-600);
+  --theme-p-900: var(--color-blue-900);
+
+  --theme-s-400: var(--color-cyan-400);
+  --theme-s-500: var(--color-cyan-500);
+  --theme-s-600: var(--color-cyan-600);
+  --theme-s-900: var(--color-cyan-900);
+}
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: #020203;
+  --color-foreground: #e2e8f0;
+  
+  --color-theme-p-300: var(--theme-p-300);
+  --color-theme-p-400: var(--theme-p-400);
+  --color-theme-p-500: var(--theme-p-500);
+  --color-theme-p-600: var(--theme-p-600);
+  --color-theme-p-900: var(--theme-p-900);
+
+  --color-theme-s-400: var(--theme-s-400);
+  --color-theme-s-500: var(--theme-s-500);
+  --color-theme-s-600: var(--theme-s-600);
+  --color-theme-s-900: var(--theme-s-900);
+  
+  --color-dark-100: #1e293b;
+  --color-dark-200: #131317;
+  --color-dark-300: #0A0A0C;
+  
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.05);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-theme-p-500 selection:text-white overflow-x-hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans tracking-tight;
+  }
+
+  section {
+    scroll-margin-top: 5.5rem;
+  }
+
+  /* Beautiful modern custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #020203;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e1e24;
+    border-radius: 9999px;
+    border: 2px solid #020203;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-p-500, #6366f1);
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-glass border border-glass-border;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-theme-p-400 to-theme-s-400;
+  }
+
+  .glow-effect {
+    @apply relative;
+  }
+  
+  .glow-effect::before {
+    @apply content-[''] absolute -inset-0.5 bg-gradient-to-r from-theme-p-500 to-theme-s-600 rounded-3xl blur-md opacity-30 transition duration-500;
+    z-index: -1;
+  }
+  
+  .glow-effect:hover::before {
+    @apply opacity-60 duration-300;
+  }
+  
+  .section-label {
+    @apply text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-12deg); }
+  100% { transform: translateX(200%) skewX(-12deg); }
+}
+
+html[data-mode="light"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html[data-mode="light"] img,
+html[data-mode="light"] video,
+html[data-mode="light"] canvas,
+html[data-mode="light"] iframe {
+  filter: invert(1) hue-rotate(180deg);
+}

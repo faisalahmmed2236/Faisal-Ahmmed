@@ -1,0 +1,6 @@
+{
+  "name": "Premium Portfolio Platform",
+  "description": "A top 0.1% personal portfolio system with a fully customizable, data-driven architecture.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

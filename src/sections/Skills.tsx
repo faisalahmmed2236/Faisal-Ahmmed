@@ -1,0 +1,74 @@
+import React from 'react';
+import { motion } from 'motion/react';
+import { Terminal, Database, Wrench, Brain } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { SectionHeading } from '../components/SectionHeading';
+
+const getCategoryIcon = (category: string) => {
+  if (category.toLowerCase().includes('ai') || category.toLowerCase().includes('ia') || category.toLowerCase().includes('deep')) return <Brain size={20} />;
+  if (category.toLowerCase().includes('frontend')) return <Terminal size={20} />;
+  if (category.toLowerCase().includes('backend') || category.toLowerCase().includes('sistemas')) return <Database size={20} />;
+  return <Wrench size={20} />;
+};
+
+export function Skills() {
+  const { portfolioData } = useLanguage();
+  const skills = portfolioData.skills;
+
+  if (!skills || skills.length === 0) return null;
+
+  return (
+    <section id="skills" className="py-24 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 relative">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-theme-p-600/5 blur-[120px] pointer-events-none rounded-full" />
+      
+      <SectionHeading title="Technical Arsenal" subtitle="Skills" />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 relative z-10">
+        {skills.map((skillGroup, groupIdx) => (
+          <motion.div 
+            key={groupIdx}
+            initial={{ opacity: 0, y: 35, scale: 0.97 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: groupIdx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col gap-6 bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl relative overflow-hidden group hover:border-theme-p-500/50 transition-colors"
+          >
+            {/* Background pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:1rem_1rem] pointer-events-none opacity-50" />
+            
+            <div className="flex items-center gap-3 border-b border-white/10 pb-4 relative z-10">
+              <div className="text-theme-p-400 p-2 bg-theme-p-500/10 rounded-xl">
+                {getCategoryIcon(skillGroup.category)}
+              </div>
+              <h3 className="text-lg font-bold font-mono text-white/90">
+                {skillGroup.category}
+              </h3>
+            </div>
+            
+            <div className="flex flex-col gap-5 relative z-10">
+              {skillGroup.items.map((skill, idx) => (
+                <div key={idx} className="flex flex-col gap-2 group/skill hover:-translate-y-0.5 transition-transform cursor-default">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-medium text-slate-300 group-hover/skill:text-white transition-colors">{skill.name}</span>
+                    <span className="font-mono text-theme-p-400 text-xs group-hover/skill:scale-110 transition-transform origin-right">{skill.level}%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-black/50 border border-white/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-gradient-to-r from-theme-p-600 to-theme-p-400 rounded-full relative"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${skill.level}%` }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 1.5, delay: 0.2 + (idx * 0.1), type: "spring", bounce: 0.2 }}
+                    >
+                      <div className="absolute top-0 right-0 bottom-0 w-10 bg-gradient-to-r from-transparent to-white/30" />
+                    </motion.div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}

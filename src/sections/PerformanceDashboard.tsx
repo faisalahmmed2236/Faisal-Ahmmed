@@ -46,7 +46,7 @@ const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, label, color = "#10b981"
             initial={{ strokeDashoffset: circumference }}
             whileInView={{ strokeDashoffset }}
             viewport={{ once: true }}
-            transition={{ duration: 1.5, delay: delay + 0.2, ease: "easeOut" }}
+            transition={{ duration: 1.5, delay: delay + 0.2, ease: "easeOut" as any }}
             style={{ filter: `drop-shadow(0 0 6px ${color}80)` }}
             strokeLinecap="round"
           />
@@ -76,7 +76,14 @@ export function PerformanceDashboard() {
   ];
 
   return (
-    <section id="performance" className="py-24 relative overflow-hidden bg-black/40">
+    <motion.section 
+      id="performance" 
+      className="py-6 md:py-10 relative overflow-hidden bg-black/40"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" as any }}
+    >
       {/* Background elements */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
@@ -88,15 +95,16 @@ export function PerformanceDashboard() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
+            className="text-center md:text-left flex flex-col items-center md:items-start"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-6">
               <Gauge size={14} />
               <span>System Vitals</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
               Performance & <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">SEO</span>
             </h2>
-            <p className="text-slate-400 text-lg">
+            <p className="text-slate-400 text-lg mx-auto md:mx-0">
               Optimized for speed, accessibility, and search engine visibility. Real-time metrics demonstrating technical excellence across the platform.
             </p>
           </motion.div>
@@ -157,7 +165,7 @@ export function PerformanceDashboard() {
                       initial={{ width: 0 }}
                       whileInView={{ width: `${vital.percent}%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 1.2, delay: i * 0.1 + 0.4, ease: "easeOut" }}
+                      transition={{ duration: 1.2, delay: i * 0.1 + 0.4, ease: "easeOut" as any }}
                     >
                       <div className="absolute inset-0 bg-white/20 w-full h-full transform -skew-x-12 animate-[shimmer_2s_infinite]" />
                     </motion.div>
@@ -185,6 +193,6 @@ export function PerformanceDashboard() {
           </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -1,19 +1,60 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useMotionValue, useTransform, animate } from 'motion/react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
 import { Eye, MousePointerClick, Globe2, Activity } from 'lucide-react';
 
-const trafficData = [
-  { name: 'Mon', views: 400, unique: 240 },
-  { name: 'Tue', views: 300, unique: 139 },
-  { name: 'Wed', views: 550, unique: 380 },
-  { name: 'Thu', views: 278, unique: 190 },
-  { name: 'Fri', views: 189, unique: 140 },
-  { name: 'Sat', views: 239, unique: 120 },
-  { name: 'Sun', views: 349, unique: 210 },
-];
+function AnimatedCounter({ value, isTime = false }: { value: number, isTime?: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => {
+    if (isTime) {
+      const m = Math.floor(latest / 60);
+      const s = Math.floor(latest % 60);
+      return `${m}m ${s}s`;
+    }
+    return Math.round(latest).toLocaleString();
+  });
 
-const projectInterestData = [
+  useEffect(() => {
+    if (inView) {
+      const current = count.get();
+      const duration = current === 0 ? 2.5 : 1.5;
+      const controls = animate(count, value, { duration, ease: "easeOut" as any });
+      return controls.stop;
+    }
+  }, [inView, value, count]);
+
+  return <motion.span ref={ref}>{rounded}</motion.span>;
+}
+
+const generateTrafficData = () => {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const today = new Date().getDay();
+  
+  const baseData = [
+    { views: 400, unique: 240 },
+    { views: 300, unique: 139 },
+    { views: 550, unique: 380 },
+    { views: 278, unique: 190 },
+    { views: 189, unique: 140 },
+    { views: 239, unique: 120 },
+    { views: 349, unique: 210 },
+  ];
+  
+  return baseData.map((data, index) => {
+    const dayIndex = (((today - (6 - index)) % 7) + 7) % 7;
+    return {
+      name: days[dayIndex],
+      ...data
+    };
+  });
+};
+
+const initialTrafficData = generateTrafficData();
+
+const initialProjectInterestData = [
   { name: 'E-Commerce', clicks: 120 },
   { name: 'AI Dashboard', clicks: 250 },
   { name: 'Finance App', clicks: 180 },
@@ -21,8 +62,60 @@ const projectInterestData = [
 ];
 
 export function VisitorInsights() {
+  const [metrics, setMetrics] = useState([
+    { label: 'Total Page Views', value: 12450, increase: '+14%', icon: Eye, isTime: false },
+    { label: 'Unique Visitors', value: 8210, increase: '+22%', icon: Globe2, isTime: false },
+    { label: 'Project Clicks', value: 3142, increase: '+8%', icon: MousePointerClick, isTime: false },
+    { label: 'Avg. Session', value: 252, increase: '+12%', icon: Activity, isTime: true },
+  ]);
+  const [trafficData, setTrafficData] = useState(initialTrafficData);
+  const [projectInterestData, setProjectInterestData] = useState(initialProjectInterestData);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Simulate live metric updates
+      setMetrics(prev => prev.map(m => {
+        let increment = 0;
+        if (m.label === 'Total Page Views') increment = Math.floor(Math.random() * 4);
+        if (m.label === 'Unique Visitors') increment = Math.floor(Math.random() * 2);
+        if (m.label === 'Project Clicks') increment = Math.floor(Math.random() * 2);
+        if (m.label === 'Avg. Session') increment = Math.random() > 0.8 ? 1 : 0;
+        return { ...m, value: m.value + increment };
+      }));
+
+      // Simulate live traffic data updates
+      setTrafficData(prev => {
+        const newData = [...prev];
+        const last = newData[newData.length - 1];
+        newData[newData.length - 1] = {
+          ...last,
+          views: last.views + Math.floor(Math.random() * 4),
+          unique: last.unique + Math.floor(Math.random() * 2)
+        };
+        return newData;
+      });
+
+      // Simulate live project clicks updates
+      setProjectInterestData(prev => {
+        return prev.map(p => ({
+          ...p,
+          clicks: p.clicks + (Math.random() > 0.7 ? Math.floor(Math.random() * 2) : 0)
+        }));
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section id="insights" className="py-24 relative overflow-hidden">
+    <motion.section 
+      id="insights" 
+      className="py-6 md:py-10 relative overflow-hidden"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" as any }}
+    >
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-theme-p-600/10 blur-[120px] rounded-full pointer-events-none" />
       
@@ -33,15 +126,16 @@ export function VisitorInsights() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
+            className="text-center md:text-left flex flex-col items-center md:items-start"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-theme-s-500/10 border border-theme-s-500/20 text-theme-s-400 text-xs font-bold uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-theme-s-500/10 border border-theme-s-500/20 text-theme-s-400 text-xs font-bold uppercase tracking-widest mb-6">
               <Activity size={14} />
               <span>Platform Analytics</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
               Visitor <span className="text-transparent bg-clip-text bg-gradient-to-r from-theme-p-400 to-theme-s-400">Insights</span>
             </h2>
-            <p className="text-slate-400 max-w-lg text-lg">
+            <p className="text-slate-400 max-w-lg text-lg mx-auto md:mx-0">
               Real-time portfolio telemetry and engagement metrics visualized.
             </p>
           </motion.div>
@@ -49,12 +143,7 @@ export function VisitorInsights() {
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-          {[
-            { label: 'Total Page Views', value: '12,450', increase: '+14%', icon: Eye },
-            { label: 'Unique Visitors', value: '8,210', increase: '+22%', icon: Globe2 },
-            { label: 'Project Clicks', value: '3,142', increase: '+8%', icon: MousePointerClick },
-            { label: 'Avg. Session', value: '4m 12s', increase: '+12%', icon: Activity },
-          ].map((metric, idx) => (
+          {metrics.map((metric, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 20 }}
@@ -73,7 +162,9 @@ export function VisitorInsights() {
                 </span>
               </div>
               <p className="text-sm text-slate-400 font-medium mb-1">{metric.label}</p>
-              <h3 className="text-2xl font-bold">{metric.value}</h3>
+              <h3 className="text-2xl font-bold">
+                <AnimatedCounter value={metric.value} isTime={metric.isTime} />
+              </h3>
             </motion.div>
           ))}
         </div>
@@ -94,7 +185,7 @@ export function VisitorInsights() {
             </div>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trafficData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <AreaChart data={trafficData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
@@ -133,10 +224,10 @@ export function VisitorInsights() {
             </div>
             <div className="h-[300px] w-full flex-grow">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={projectInterestData} layout="vertical" margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <BarChart data={projectInterestData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={true} vertical={false} />
                   <XAxis type="number" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis dataKey="name" type="category" stroke="rgba(255,255,255,0.7)" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis dataKey="name" type="category" width={110} stroke="rgba(255,255,255,0.7)" fontSize={11} tickLine={false} axisLine={false} />
                   <RechartsTooltip 
                     cursor={{fill: 'rgba(255,255,255,0.05)'}}
                     contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
@@ -148,6 +239,6 @@ export function VisitorInsights() {
           </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

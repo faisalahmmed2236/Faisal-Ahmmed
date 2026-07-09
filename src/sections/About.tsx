@@ -23,9 +23,16 @@ export function About() {
   const { profile } = portfolioData;
 
   return (
-    <section id="about" className="py-24 relative">
+    <motion.section 
+      id="about" 
+      className="py-6 md:py-10 relative"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" as any }}
+    >
       <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading title="Core Capabilities" subtitle="A brief introduction to who I am and what I do." />
+        <SectionHeading title="Core Capabilities" subtitle="A brief introduction to who I am and what I do." readTime="2 min" />
         
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -34,9 +41,9 @@ export function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="bg-white/5 border border-white/5 p-8 md:p-12 rounded-3xl relative overflow-hidden">
+            <div className="bg-white/5 border border-white/5 p-8 md:p-12 rounded-3xl relative overflow-hidden text-center md:text-left">
                <div className="absolute top-0 right-0 w-64 h-64 bg-theme-p-600/10 rounded-full blur-[80px]" />
-               <div className="flex items-center gap-2 mb-4 text-theme-p-400 text-xs font-mono uppercase tracking-wider relative z-10 border-b border-white/10 pb-4">
+               <div className="flex items-center justify-center md:justify-start gap-2 mb-4 text-theme-p-400 text-xs font-mono uppercase tracking-wider relative z-10 border-b border-white/10 pb-4">
                  <div className="flex gap-1.5 mr-2">
                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
@@ -45,7 +52,7 @@ export function About() {
                  <Clock size={14} /> {getReadingTime(profile.bio)} | system_profile.ts
                </div>
                
-               <div className="font-mono text-sm leading-loose text-slate-300 relative z-10">
+               <div className="font-mono text-sm leading-loose text-slate-300 relative z-10 text-left inline-block">
                  <span className="text-theme-p-400">const</span> <span className="text-blue-400">engineer</span> = {'{'}
                  <div className="pl-4 border-l border-white/5 ml-2 mt-2 mb-2 space-y-2">
                     <span className="text-theme-s-400">name:</span> <span className="text-green-300">"{profile.name}"</span>,<br/>
@@ -55,7 +62,7 @@ export function About() {
                  {'}'};
                </div>
                
-               <div className="mt-8 flex gap-4 relative z-10 flex-wrap pt-6 border-t border-white/10">
+               <div className="mt-8 flex gap-4 relative z-10 flex-wrap pt-6 border-t border-white/10 justify-center md:justify-start">
                  {Object.entries(profile.socials).map(([platform, url]) => {
                    if (!url) return null;
                    const urlStr = url as string;
@@ -104,6 +111,6 @@ export function About() {
           </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

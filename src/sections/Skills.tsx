@@ -18,25 +18,43 @@ export function Skills() {
   if (!skills || skills.length === 0) return null;
 
   return (
-    <section id="skills" className="py-24 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 relative">
+    <motion.section 
+      id="skills" 
+      className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" as any }}
+    >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-theme-p-600/5 blur-[120px] pointer-events-none rounded-full" />
       
-      <SectionHeading title="Technical Arsenal" subtitle="Skills" />
+      <SectionHeading title="Technical Arsenal" subtitle="Skills" readTime="1 min" />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 relative z-10">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 relative z-10"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={{
+          hidden: {},
+          show: {
+            transition: { staggerChildren: 0.2 }
+          }
+        }}
+      >
         {skills.map((skillGroup, groupIdx) => (
           <motion.div 
             key={groupIdx}
-            initial={{ opacity: 0, y: 35, scale: 0.97 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: groupIdx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            variants={{
+              hidden: { opacity: 0, y: 35, scale: 0.97 },
+              show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" as any } }
+            }}
             className="flex flex-col gap-6 bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl relative overflow-hidden group hover:border-theme-p-500/50 transition-colors"
           >
             {/* Background pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:1rem_1rem] pointer-events-none opacity-50" />
             
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4 relative z-10">
+            <div className="flex items-center justify-center md:justify-start gap-3 border-b border-white/10 pb-4 relative z-10 text-center md:text-left">
               <div className="text-theme-p-400 p-2 bg-theme-p-500/10 rounded-xl">
                 {getCategoryIcon(skillGroup.category)}
               </div>
@@ -68,7 +86,7 @@ export function Skills() {
             </div>
           </motion.div>
         ))}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

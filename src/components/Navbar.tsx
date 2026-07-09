@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Globe, Download, Moon, Sun, Settings } from 'lucide-react';
+import { Menu, X, Globe, Download, Moon, Sun, Monitor, Settings } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
 import { generateResume } from '../utils/pdfGenerator';
+import { triggerVibration, hapticPatterns } from '../lib/haptics';
 
 const navLinks = [
   { name: 'About', href: '#about' },
@@ -17,6 +19,7 @@ const navLinks = [
 
 export function Navbar() {
   const { playClick, playHover, playToggle, playOpen, playClose } = useAudio();
+  const { displayMode, setDisplayMode } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpenState] = useState(false);
 
@@ -27,10 +30,9 @@ export function Navbar() {
       playClose();
     }
     setMobileMenuOpenState(open);
+    triggerVibration(open ? hapticPatterns.medium : hapticPatterns.light);
   };
-  const [isLightMode, setIsLightMode] = useState(() => {
-    return document.documentElement.getAttribute('data-mode') === 'light';
-  });
+
   const [isOnline, setIsOnline] = useState(() => typeof window !== 'undefined' ? navigator.onLine : true);
   const { language, setLanguage, portfolioData } = useLanguage();
 
@@ -48,19 +50,16 @@ export function Navbar() {
   }, []);
 
   const toggleLanguage = () => {
+    triggerVibration(hapticPatterns.light);
     playToggle();
     setLanguage(language === 'en' ? 'es' : 'en');
   };
 
   const toggleMode = () => {
+    triggerVibration(hapticPatterns.light);
     playToggle();
-    const newMode = !isLightMode;
-    setIsLightMode(newMode);
-    if (newMode) {
-      document.documentElement.setAttribute('data-mode', 'light');
-    } else {
-      document.documentElement.removeAttribute('data-mode');
-    }
+    const nextMode = displayMode === 'dark' ? 'light' : displayMode === 'light' ? 'system' : 'dark';
+    setDisplayMode(nextMode);
   };
 
   useEffect(() => {
@@ -72,6 +71,7 @@ export function Navbar() {
   }, []);
 
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    triggerVibration(hapticPatterns.medium);
     e.preventDefault();
     playClick();
     setMobileMenuOpen(false);
@@ -82,6 +82,7 @@ export function Navbar() {
   };
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    triggerVibration(hapticPatterns.light);
     e.preventDefault();
     playClick();
     const id = href.replace('#', '');
@@ -147,13 +148,13 @@ export function Navbar() {
             whileTap={{ scale: 0.9 }}
             onClick={toggleMode}
             className="flex items-center justify-center p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
-            title={isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            title={`Switch Display Mode (Current: ${displayMode})`}
           >
-            {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
+            {displayMode === 'light' ? <Sun size={18} /> : displayMode === 'system' ? <Monitor size={18} /> : <Moon size={18} />}
           </motion.button>
           <motion.button 
             whileTap={{ scale: 0.9 }}
-            onClick={() => generateResume(portfolioData)}
+            onClick={() => { generateResume(portfolioData); triggerVibration(hapticPatterns.medium); }}
             className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors cursor-pointer"
             title="Download Resume"
           >
@@ -177,9 +178,9 @@ export function Navbar() {
             whileTap={{ scale: 0.9 }}
             onClick={toggleMode}
             className="flex items-center justify-center p-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
-            title={isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            title={`Switch Display Mode (Current: ${displayMode})`}
           >
-            {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
+            {displayMode === 'light' ? <Sun size={18} /> : displayMode === 'system' ? <Monitor size={18} /> : <Moon size={18} />}
           </motion.button>
           <motion.button 
             whileTap={{ scale: 0.9 }}

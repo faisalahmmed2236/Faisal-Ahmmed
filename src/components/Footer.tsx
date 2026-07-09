@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { generateResume } from '../utils/pdfGenerator';
+import { triggerVibration, hapticPatterns } from '../lib/haptics';
 import { Download } from 'lucide-react';
 
 export function Footer() {
@@ -16,7 +17,7 @@ export function Footer() {
       
       <div className="flex gap-6 uppercase items-center flex-wrap justify-center">
         <button
-          onClick={() => generateResume(portfolioData)}
+          onClick={() => { generateResume(portfolioData); triggerVibration(hapticPatterns.medium); }}
           className="flex items-center gap-1 hover:text-white transition-colors"
           title="Download Resume"
         >

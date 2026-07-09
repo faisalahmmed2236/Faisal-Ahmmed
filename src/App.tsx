@@ -3,9 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './sections/Hero';
+import { ThemeSettings } from './components/ThemeSettings';
+import { AIAssistantWidget } from './components/AIAssistantWidget';
+import { FloatingShareWidget } from './components/FloatingShareWidget';
+import { ExitIntentModal } from './components/ExitIntentModal';
+import { SectionDivider } from './components/SectionDivider';
+import { useMetaTags } from './hooks/useMetaTags';
+import { ScrollProgress } from './components/ScrollProgress';
+
+import { ParticleBackground } from './components/ParticleBackground';
+
 import { About } from './sections/About';
 import { Services } from './sections/Services';
 import { Skills } from './sections/Skills';
@@ -17,49 +27,56 @@ import { PerformanceDashboard } from './sections/PerformanceDashboard';
 import { Testimonials } from './sections/Testimonials';
 import { Contact } from './sections/Contact';
 import { Footer } from './components/Footer';
-import { ThemeSettings } from './components/ThemeSettings';
-import { AIAssistantWidget } from './components/AIAssistantWidget';
-import { FloatingShareWidget } from './components/FloatingShareWidget';
-import { SectionDivider } from './components/SectionDivider';
-import { useMetaTags } from './hooks/useMetaTags';
-import { ScrollProgress } from './components/ScrollProgress';
+
+// Loading fallback for lazy components
+const SectionLoader = () => (
+  <div className="w-full h-32 flex items-center justify-center">
+    <div className="w-6 h-6 border-2 border-theme-p-500/20 border-t-theme-p-500 rounded-full animate-spin"></div>
+  </div>
+);
 
 export default function App() {
   useMetaTags();
   
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-theme-p-500/30">
+      <ParticleBackground />
       <ScrollProgress />
       <Navbar />
       
       <main>
         <Hero />
-        <SectionDivider />
-        <About />
-        <SectionDivider />
-        <Skills />
-        <SectionDivider />
-        <Experience />
-        <SectionDivider />
-        <Services />
-        <SectionDivider />
-        <Projects />
-        <SectionDivider />
-        <Achievements />
-        <SectionDivider />
-        <VisitorInsights />
-        <SectionDivider />
-        <PerformanceDashboard />
-        <SectionDivider />
-        <Testimonials />
-        <SectionDivider />
-        <Contact />
+        <Suspense fallback={<SectionLoader />}>
+          <SectionDivider />
+          <About />
+          <SectionDivider />
+          <Skills />
+          <SectionDivider />
+          <Experience />
+          <SectionDivider />
+          <Services />
+          <SectionDivider />
+          <Projects />
+          <SectionDivider />
+          <Achievements />
+          <SectionDivider />
+          <VisitorInsights />
+          <SectionDivider />
+          <PerformanceDashboard />
+          <SectionDivider />
+          <Testimonials />
+          <SectionDivider />
+          <Contact />
+        </Suspense>
       </main>
 
-      <Footer />
+      <Suspense fallback={<SectionLoader />}>
+        <Footer />
+      </Suspense>
       <ThemeSettings />
       <AIAssistantWidget />
       <FloatingShareWidget />
+      <ExitIntentModal />
     </div>
   );
 }

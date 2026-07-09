@@ -1,78 +1,43 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 
-export function SectionDivider() {
+export const SectionDivider = memo(function SectionDivider() {
   return (
-    <div className="relative h-24 flex items-center justify-center overflow-hidden pointer-events-none">
+    <div className="relative h-4 md:h-8 flex items-center justify-center pointer-events-none my-1 md:my-0">
       {/* Main horizontal line */}
       <motion.div 
         initial={{ scaleX: 0, opacity: 0 }}
         whileInView={{ scaleX: 1, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.5, ease: "easeInOut" }}
-        className="absolute h-[1px] w-full max-w-4xl bg-gradient-to-r from-transparent via-theme-p-500/30 to-transparent"
+        className="absolute h-[1px] w-full bg-gradient-to-r from-transparent via-theme-p-500/30 to-transparent"
       />
       
-      {/* Glowing center point */}
-      <div className="relative">
+      {/* 3D Visual Core */}
+      <div className="relative w-10 h-10 md:w-16 md:h-16 flex items-center justify-center" style={{ perspective: '800px' }}>
         <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-          className="w-1.5 h-1.5 rounded-full bg-theme-p-500 shadow-[0_0_15px_rgba(var(--color-theme-p-500),0.5)] z-10"
-        />
-        
-        {/* Pulsing rings */}
-        <motion.div
-          animate={{ 
-            scale: [1, 2],
-            opacity: [0.5, 0]
+          className="absolute inset-0 m-auto w-full h-full"
+          style={{ transformStyle: 'preserve-3d' }}
+          animate={{
+            rotateX: [0, 360],
+            rotateY: [0, 360],
+            rotateZ: [0, 180],
           }}
-          transition={{ 
-            duration: 2.5,
+          transition={{
+            duration: 12,
             repeat: Infinity,
-            ease: "easeOut"
+            ease: "linear"
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border border-theme-p-500/20"
-        />
-        
-        <motion.div
-          animate={{ 
-            scale: [1, 1.5],
-            opacity: [0.3, 0]
-          }}
-          transition={{ 
-            duration: 2.5,
-            delay: 1.25,
-            repeat: Infinity,
-            ease: "easeOut"
-          }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-theme-s-500/10"
-        />
-      </div>
-
-      {/* Floating particles or smaller lines */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ x: 0, opacity: 0 }}
-            whileInView={{ 
-              x: i % 2 === 0 ? [0, -100] : [0, 100],
-              opacity: [0, 0.4, 0]
-            }}
-            viewport={{ once: false }}
-            transition={{ 
-              duration: 3 + i,
-              repeat: Infinity,
-              ease: "linear",
-              delay: i * 0.5
-            }}
-            className="absolute h-px w-20 bg-gradient-to-r from-transparent via-theme-p-400/20 to-transparent"
-          />
-        ))}
+        >
+          {/* Inner point */}
+          <div className="absolute inset-0 m-auto w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-theme-p-500 shadow-[0_0_15px_rgba(var(--color-theme-p-500),1)]" style={{ transform: 'translateZ(0px)' }} />
+          
+          {/* 3D Rings */}
+          <div className="absolute inset-0 m-auto w-6 h-6 md:w-10 md:h-10 border border-theme-p-500/50 rounded-full" style={{ transform: 'rotateX(75deg)' }} />
+          <div className="absolute inset-0 m-auto w-6 h-6 md:w-10 md:h-10 border border-theme-s-500/40 rounded-full" style={{ transform: 'rotateX(75deg) rotateY(60deg)' }} />
+          <div className="absolute inset-0 m-auto w-6 h-6 md:w-10 md:h-10 border border-theme-p-500/40 rounded-full" style={{ transform: 'rotateX(75deg) rotateY(120deg)' }} />
+        </motion.div>
       </div>
     </div>
   );
-}
+});

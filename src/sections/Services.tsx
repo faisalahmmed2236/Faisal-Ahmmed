@@ -9,9 +9,16 @@ export function Services() {
   const { services } = portfolioData;
 
   return (
-    <section id="services" className="py-24 relative bg-black/20">
+    <motion.section 
+      id="services" 
+      className="py-6 md:py-10 relative bg-black/20"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" as any }}
+    >
       <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading title="System Architecture" subtitle="Specialized services designed to elevate your digital presence." />
+        <SectionHeading title="System Architecture" subtitle="Specialized services designed to elevate your digital presence." readTime="3 min" />
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
@@ -20,8 +27,8 @@ export function Services() {
               initial={{ opacity: 0, y: 35, scale: 0.96 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-panel p-8 rounded-3xl group hover:border-theme-p-500/50 transition-colors bg-[#0A0A0C]"
+              transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" as any }}
+              className="glass-panel p-8 rounded-3xl group hover:border-theme-p-500/50 transition-colors bg-[#0A0A0C] text-center md:text-left flex flex-col items-center md:items-start"
             >
               <div className="w-12 h-12 rounded-xl bg-theme-p-500/10 border border-theme-p-500/20 flex items-center justify-center mb-6 text-theme-p-400 group-hover:scale-110 transition-transform">
                 <Icon name={service.iconName} size={24} />
@@ -34,6 +41,6 @@ export function Services() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

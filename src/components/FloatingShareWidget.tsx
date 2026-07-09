@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Share2, Twitter, Linkedin, Github, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { triggerVibration, hapticPatterns } from '../lib/haptics';
 
 export function FloatingShareWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +47,7 @@ export function FloatingShareWidget() {
               <motion.a
                 key={link.name}
                 href={link.url}
+                onClick={() => triggerVibration(hapticPatterns.light)}
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 10 }}
@@ -65,7 +67,7 @@ export function FloatingShareWidget() {
       <motion.button
         whileTap={{ scale: 0.9 }}
         whileHover={{ scale: 1.05 }}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => { setIsOpen(!isOpen); triggerVibration(hapticPatterns.medium); }}
         className="p-3 rounded-full bg-black/60 border border-white/10 text-slate-300 hover:text-white hover:border-theme-p-500/50 transition-all backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)] group cursor-pointer"
         aria-label="Share"
       >

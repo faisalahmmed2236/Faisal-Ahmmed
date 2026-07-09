@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, X, Check, Moon, Sun, Globe, Download, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { Settings, X, Check, Moon, Sun, Monitor, Globe, Download, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAudio } from '../context/AudioContext';
 import { generateResume } from '../utils/pdfGenerator';
+import { triggerVibration, hapticPatterns } from '../lib/haptics';
 import { motion, AnimatePresence } from 'motion/react';
 
 const themes = [
@@ -14,13 +15,10 @@ const themes = [
  ] as const;
 
 export function ThemeSettings() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, displayMode, setDisplayMode } = useTheme();
   const { language, setLanguage, portfolioData } = useLanguage();
   const { soundEnabled, setSoundEnabled, playClick, playHover, playToggle, playOpen, playClose } = useAudio();
   const [isOpen, setIsOpen] = useState(false);
-  const [isLightMode, setIsLightMode] = useState(() => {
-    return document.documentElement.getAttribute('data-mode') === 'light';
-  });
 
   // Listen for custom open events from other parts of the app (like mobile nav)
   useEffect(() => {
@@ -32,15 +30,9 @@ export function ThemeSettings() {
     return () => window.removeEventListener('open-theme-settings', handleOpen);
   }, [playOpen]);
 
-  const toggleMode = () => {
+  const selectMode = (mode: 'dark' | 'light' | 'system') => {
     playToggle();
-    const newMode = !isLightMode;
-    setIsLightMode(newMode);
-    if (newMode) {
-      document.documentElement.setAttribute('data-mode', 'light');
-    } else {
-      document.documentElement.removeAttribute('data-mode');
-    }
+    setDisplayMode(mode);
   };
 
   const toggleLanguage = () => {
@@ -49,11 +41,13 @@ export function ThemeSettings() {
   };
 
   const handleOpenPanel = () => {
+    triggerVibration(hapticPatterns.medium);
     setIsOpen(true);
     playOpen();
   };
 
   const handleClosePanel = () => {
+    triggerVibration(hapticPatterns.light);
     setIsOpen(false);
     playClose();
   };
@@ -123,7 +117,7 @@ export function ThemeSettings() {
                         <motion.button
                           whileTap={{ scale: 0.96 }}
                           key={t.id}
-                          onClick={() => selectTheme(t.id as any)}
+                          onClick={() => { selectTheme(t.id as any); triggerVibration(hapticPatterns.medium); }}
                           onMouseEnter={playHover}
                           className={`flex flex-col items-center gap-2 p-3 rounded-xl border text-left transition-all cursor-pointer ${
                             theme === t.id 
@@ -149,12 +143,12 @@ export function ThemeSettings() {
                   {/* UI Display Mode */}
                   <div className="pt-4 border-t border-white/5">
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">Display Mode</p>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                       <button
-                        onClick={toggleMode}
+                        onClick={() => { selectMode('dark'); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
-                        className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
-                          !isLightMode 
+                        className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                          displayMode === 'dark'
                             ? 'bg-white/10 border-theme-p-500/50 text-white' 
                             : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
                         }`}
@@ -163,16 +157,28 @@ export function ThemeSettings() {
                         Dark
                       </button>
                       <button
-                        onClick={toggleMode}
+                        onClick={() => { selectMode('light'); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
-                        className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
-                          isLightMode 
+                        className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                          displayMode === 'light'
                             ? 'bg-white/10 border-theme-p-500/50 text-white' 
                             : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
                         }`}
                       >
                         <Sun size={14} />
                         Light
+                      </button>
+                      <button
+                        onClick={() => { selectMode('system'); triggerVibration(hapticPatterns.light); }}
+                        onMouseEnter={playHover}
+                        className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                          displayMode === 'system'
+                            ? 'bg-white/10 border-theme-p-500/50 text-white' 
+                            : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
+                        }`}
+                      >
+                        <Monitor size={14} />
+                        System
                       </button>
                     </div>
                   </div>
@@ -182,7 +188,7 @@ export function ThemeSettings() {
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">System Language</p>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => language !== 'en' && toggleLanguage()}
+                        onClick={() => { if (language !== 'en') toggleLanguage(); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
                         className={`flex-1 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                           language === 'en'
@@ -193,7 +199,7 @@ export function ThemeSettings() {
                         English
                       </button>
                       <button
-                        onClick={() => language !== 'es' && toggleLanguage()}
+                        onClick={() => { if (language !== 'es') toggleLanguage(); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
                         className={`flex-1 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                           language === 'es'
@@ -213,6 +219,7 @@ export function ThemeSettings() {
                       <button
                         onClick={() => {
                           setSoundEnabled(true);
+                          triggerVibration(hapticPatterns.light);
                           // Soft timeout delay to let state write, then play beautiful sound feedback confirmation
                           setTimeout(() => playToggle(), 40);
                         }}
@@ -227,7 +234,7 @@ export function ThemeSettings() {
                         Enabled
                       </button>
                       <button
-                        onClick={() => setSoundEnabled(false)}
+                        onClick={() => { setSoundEnabled(false); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
                         className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                           !soundEnabled 

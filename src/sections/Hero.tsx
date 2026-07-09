@@ -3,9 +3,11 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { ArrowRight, Download, Terminal, Code2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { generateResume } from '../utils/pdfGenerator';
+import { triggerVibration, hapticPatterns } from '../lib/haptics';
 import { AnimatedGeometricShape } from '../components/AnimatedGeometricShape';
 import { TechMarquee } from '../components/TechMarquee';
 import { Interactive3DObject } from '../components/Interactive3DObject';
+import { GlitchTypewriter } from '../components/GlitchTypewriter';
 
 export function Hero() {
   const { portfolioData } = useLanguage();
@@ -54,7 +56,7 @@ export function Hero() {
       <div className="max-w-7xl mx-auto px-6 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
         
         {/* Text Content */}
-        <div className="flex-1 text-center lg:text-left z-10 pt-12 lg:pt-0">
+        <div className="flex-1 text-center lg:text-left z-10 pt-12 lg:pt-0 translate-x-3 sm:translate-x-6 lg:translate-x-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -79,17 +81,26 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center justify-center lg:justify-start gap-3 text-theme-p-400 font-mono text-base sm:text-lg md:text-xl mb-6"
+            className="flex items-center justify-center lg:justify-start gap-3 text-theme-p-400 font-mono text-base sm:text-lg md:text-xl mb-6 min-h-[2.5rem]"
           >
-            <Code2 size={24} className="animate-pulse" />
-            <span>{profile.role}</span>
+            <Code2 size={24} className="animate-pulse hidden sm:block text-theme-p-500" />
+            <span className="text-center sm:text-left leading-relaxed">
+              <GlitchTypewriter 
+                words={[
+                  profile.role,
+                  "Transforming Data into Insights",
+                  "I'm Faisal Ahmmed",
+                  "Web, Mobile & AI Solutions"
+                ]} 
+              />
+            </span>
           </motion.div>
           
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-base sm:text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0"
           >
             {profile.tagline}
           </motion.p>
@@ -98,10 +109,11 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
+            className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start w-full max-w-sm mx-auto lg:mx-0 sm:max-w-none px-4 sm:px-0"
           >
             <motion.a 
-              href="#projects" 
+              href="#projects"
+               onClick={() => triggerVibration(hapticPatterns.light)} 
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.03, boxShadow: "0 0 25px rgba(255, 255, 255, 0.15)" }}
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-theme-p-500 to-theme-s-500 text-white font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg"
@@ -109,7 +121,7 @@ export function Hero() {
               View Projects <ArrowRight size={20} />
             </motion.a>
             <motion.button 
-              onClick={() => generateResume(portfolioData)}
+              onClick={() => { generateResume(portfolioData); triggerVibration(hapticPatterns.medium); }}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.03, backgroundColor: "rgba(255,255,255,0.08)" }}
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
@@ -139,7 +151,7 @@ export function Hero() {
               style={{ transform: "translateZ(-20px)" }}
             >
                <div className="relative w-full h-full rounded-[1.8rem] overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-theme-p-600 via-theme-s-600 to-pink-500 opacity-30 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-theme-p-500 opacity-10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-700" />
                   <img 
                     src={profile.image} 
                     alt={profile.name}

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { triggerVibration, hapticPatterns } from '../lib/haptics';
 
 interface Message {
   id: string;
@@ -91,7 +92,7 @@ export function AIAssistantWidget() {
       <motion.button 
         whileTap={{ scale: 0.9 }}
         whileHover={{ scale: 1.05 }}
-        onClick={() => setIsOpen(true)}
+        onClick={() => { setIsOpen(true); triggerVibration(hapticPatterns.medium); }}
         className="fixed bottom-4 right-[64px] z-40 p-3 rounded-full bg-black/60 border border-white/10 text-slate-300 hover:text-white hover:border-theme-p-500/50 transition-colors backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)] group cursor-pointer"
         aria-label="AI Assistant"
       >
@@ -122,12 +123,21 @@ export function AIAssistantWidget() {
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="p-1 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/10"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-1">
+                <button 
+                  onClick={() => setMessages([{ id: '1', role: 'assistant', content: "Hi! I'm Faisal's Agent. Ask me anything about his experience, projects, or tech stack!" }])}
+                  className="p-1 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/10"
+                  title="Clear Chat"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                </button>
+                <button 
+                  onClick={() => { setIsOpen(false); triggerVibration(hapticPatterns.light); }}
+                  className="p-1 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/10"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             {/* Chat Area */}

@@ -21,7 +21,7 @@ export function Experience() {
       className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="absolute top-1/2 right-0 w-[40%] h-[40%] bg-theme-p-600/10 rounded-full blur-[120px] pointer-events-none" />
@@ -75,7 +75,7 @@ export function Experience() {
                 },
                 exit: { opacity: 0, y: -20, transition: { duration: 0.3 } }
               }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true, margin: "-20px" }}
               className="space-y-12"
             >
               {experiences.map((exp, idx) => (
@@ -144,7 +144,7 @@ export function Experience() {
                 },
                 exit: { opacity: 0, y: -20, transition: { duration: 0.3 } }
               }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true, margin: "-20px" }}
               className="space-y-12"
             >
               {education.map((edu, idx) => (

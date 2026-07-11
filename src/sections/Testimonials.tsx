@@ -14,7 +14,7 @@ export function Testimonials() {
       className="py-6 md:py-10 relative overflow-hidden"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-theme-p-500/20 to-transparent -z-10" />

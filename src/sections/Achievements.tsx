@@ -14,7 +14,7 @@ export function Achievements() {
       className="py-6 md:py-10 relative bg-black/20"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="max-w-4xl mx-auto px-6">
@@ -26,7 +26,7 @@ export function Achievements() {
               key={achievement.id}
               initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30, y: 15 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" as any }}
               className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
             >

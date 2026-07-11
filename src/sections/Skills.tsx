@@ -11,6 +11,18 @@ const getCategoryIcon = (category: string) => {
   return <Wrench size={20} />;
 };
 
+const barVariants = {
+  hidden: { width: 0 },
+  show: (custom: { level: number; idx: number }) => ({
+    width: `${custom.level}%`,
+    transition: { 
+      duration: 1.0, 
+      delay: 0.1 + custom.idx * 0.08,
+      ease: "easeOut" as any
+    }
+  })
+};
+
 export function Skills() {
   const { portfolioData } = useLanguage();
   const skills = portfolioData.skills;
@@ -23,7 +35,7 @@ export function Skills() {
       className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-theme-p-600/5 blur-[120px] pointer-events-none rounded-full" />
@@ -34,7 +46,7 @@ export function Skills() {
         className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 relative z-10"
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-20px" }}
         variants={{
           hidden: {},
           show: {
@@ -73,10 +85,8 @@ export function Skills() {
                   <div className="h-1.5 w-full bg-black/50 border border-white/5 rounded-full overflow-hidden">
                     <motion.div 
                       className="h-full bg-gradient-to-r from-theme-p-600 to-theme-p-400 rounded-full relative"
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${skill.level}%` }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 1.5, delay: 0.2 + (idx * 0.1), type: "spring", bounce: 0.2 }}
+                      variants={barVariants}
+                      custom={{ level: skill.level, idx }}
                     >
                       <div className="absolute top-0 right-0 bottom-0 w-10 bg-gradient-to-r from-transparent to-white/30" />
                     </motion.div>

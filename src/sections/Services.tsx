@@ -14,7 +14,7 @@ export function Services() {
       className="py-6 md:py-10 relative bg-black/20"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="max-w-7xl mx-auto px-6">
@@ -26,7 +26,7 @@ export function Services() {
               key={service.id}
               initial={{ opacity: 0, y: 35, scale: 0.96 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" as any }}
               className="glass-panel p-8 rounded-3xl group hover:border-theme-p-500/50 transition-colors bg-[#0A0A0C] text-center md:text-left flex flex-col items-center md:items-start"
             >

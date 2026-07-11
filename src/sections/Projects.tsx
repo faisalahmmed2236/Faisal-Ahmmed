@@ -36,7 +36,7 @@ export function Projects() {
       className="py-6 md:py-10 relative"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="max-w-7xl mx-auto px-6">
@@ -87,7 +87,7 @@ export function Projects() {
           className="flex flex-col gap-16"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-20px" }}
           variants={{
             hidden: {},
             show: {

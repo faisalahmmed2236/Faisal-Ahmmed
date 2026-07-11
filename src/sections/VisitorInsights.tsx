@@ -4,7 +4,7 @@ import { Eye, MousePointerClick, Globe2, Activity } from 'lucide-react';
 
 function AnimatedCounter({ value, isTime = false }: { value: number, isTime?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
   
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => {
@@ -379,7 +379,7 @@ export function VisitorInsights() {
       className="py-6 md:py-10 relative overflow-hidden"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       {/* Background Glow */}

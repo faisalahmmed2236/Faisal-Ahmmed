@@ -14,7 +14,7 @@ export function Contact() {
       className="py-10 md:py-16 relative"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.6, ease: "easeOut" as any }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-theme-p-900/10 -z-10" />

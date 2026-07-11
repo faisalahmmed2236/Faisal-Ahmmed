@@ -126,11 +126,11 @@ export const ParticleBackground: React.FC = () => {
         if (this.y < pad || this.y > height - pad) this.vy = -this.vy;
       }
 
-      draw(ctx: CanvasRenderingContext2D, color: string) {
+      draw(ctx: CanvasRenderingContext2D, color: string, color04: string) {
         ctx.save();
         const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
         grad.addColorStop(0, color);
-        grad.addColorStop(0.5, color.replace(/[\d.]+\)$/g, '0.04)'));
+        grad.addColorStop(0.5, color04);
         grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -168,11 +168,14 @@ export const ParticleBackground: React.FC = () => {
       if (isLight) {
         // Light mode needs beautiful soft blue background elements
         return {
-          primaryBlob: 'rgba(59, 130, 246, 0.12)',     // Blue-500 equivalent in dark
-          secondaryBlob: 'rgba(96, 165, 250, 0.10)',   // Sky-400 equivalent in dark
-          tertiaryBlob: 'rgba(147, 51, 234, 0.08)',    // Purple
+          primaryBlob: 'rgba(59, 130, 246, 0.12)',
+          primaryBlob04: 'rgba(59, 130, 246, 0.04)',
+          secondaryBlob: 'rgba(96, 165, 250, 0.10)',
+          secondaryBlob04: 'rgba(96, 165, 250, 0.04)',
+          tertiaryBlob: 'rgba(147, 51, 234, 0.08)',
+          tertiaryBlob04: 'rgba(147, 51, 234, 0.04)',
           particle: 'rgba(59, 130, 246, 0.25)',
-          line: 'rgba(59, 130, 246, 0.08)'
+          linePrefix: 'rgba(59, 130, 246, '
         };
       }
 
@@ -180,40 +183,52 @@ export const ParticleBackground: React.FC = () => {
       switch (themeAttr) {
         case 'emerald':
           return {
-            primaryBlob: 'rgba(16, 185, 129, 0.12)',   // Emerald
-            secondaryBlob: 'rgba(20, 184, 166, 0.10)', // Teal
-            tertiaryBlob: 'rgba(6, 182, 212, 0.08)',   // Cyan
+            primaryBlob: 'rgba(16, 185, 129, 0.12)',
+            primaryBlob04: 'rgba(16, 185, 129, 0.04)',
+            secondaryBlob: 'rgba(20, 184, 166, 0.10)',
+            secondaryBlob04: 'rgba(20, 184, 166, 0.04)',
+            tertiaryBlob: 'rgba(6, 182, 212, 0.08)',
+            tertiaryBlob04: 'rgba(6, 182, 212, 0.04)',
             particle: 'rgba(16, 185, 129, 0.25)',
-            line: 'rgba(16, 185, 129, 0.08)'
+            linePrefix: 'rgba(16, 185, 129, '
           };
         case 'rose':
           return {
-            primaryBlob: 'rgba(244, 63, 94, 0.12)',    // Rose
-            secondaryBlob: 'rgba(249, 115, 22, 0.10)',  // Orange
-            tertiaryBlob: 'rgba(236, 72, 153, 0.08)',  // Pink
+            primaryBlob: 'rgba(244, 63, 94, 0.12)',
+            primaryBlob04: 'rgba(244, 63, 94, 0.04)',
+            secondaryBlob: 'rgba(249, 115, 22, 0.10)',
+            secondaryBlob04: 'rgba(249, 115, 22, 0.04)',
+            tertiaryBlob: 'rgba(236, 72, 153, 0.08)',
+            tertiaryBlob04: 'rgba(236, 72, 153, 0.04)',
             particle: 'rgba(244, 63, 94, 0.25)',
-            line: 'rgba(244, 63, 94, 0.08)'
+            linePrefix: 'rgba(244, 63, 94, '
           };
         case 'blue':
           return {
-            primaryBlob: 'rgba(59, 130, 246, 0.12)',   // Blue
-            secondaryBlob: 'rgba(6, 182, 212, 0.10)',  // Cyan
-            tertiaryBlob: 'rgba(139, 92, 246, 0.08)',  // Purple
+            primaryBlob: 'rgba(59, 130, 246, 0.12)',
+            primaryBlob04: 'rgba(59, 130, 246, 0.04)',
+            secondaryBlob: 'rgba(6, 182, 212, 0.10)',
+            secondaryBlob04: 'rgba(6, 182, 212, 0.04)',
+            tertiaryBlob: 'rgba(139, 92, 246, 0.08)',
+            tertiaryBlob04: 'rgba(139, 92, 246, 0.04)',
             particle: 'rgba(59, 130, 246, 0.25)',
-            line: 'rgba(59, 130, 246, 0.08)'
+            linePrefix: 'rgba(59, 130, 246, '
           };
         default: // Indigo/Purple default
           return {
-            primaryBlob: 'rgba(99, 102, 241, 0.12)',   // Indigo
-            secondaryBlob: 'rgba(168, 85, 247, 0.10)', // Purple
-            tertiaryBlob: 'rgba(236, 72, 153, 0.08)',  // Pink
+            primaryBlob: 'rgba(99, 102, 241, 0.12)',
+            primaryBlob04: 'rgba(99, 102, 241, 0.04)',
+            secondaryBlob: 'rgba(168, 85, 247, 0.10)',
+            secondaryBlob04: 'rgba(168, 85, 247, 0.04)',
+            tertiaryBlob: 'rgba(236, 72, 153, 0.08)',
+            tertiaryBlob04: 'rgba(236, 72, 153, 0.04)',
             particle: 'rgba(99, 102, 241, 0.25)',
-            line: 'rgba(99, 102, 241, 0.08)'
+            linePrefix: 'rgba(99, 102, 241, '
           };
       }
     };
 
-    const drawLines = (lineColor: string) => {
+    const drawLines = (lineColorPrefix: string) => {
       // Fast path connecting particles (optimized double-loop distance threshold)
       const maxDistance = 110;
       const maxDistanceSq = maxDistance * maxDistance;
@@ -229,7 +244,7 @@ export const ParticleBackground: React.FC = () => {
           if (distSq < maxDistanceSq) {
             const dist = Math.sqrt(distSq);
             const opacity = (1 - (dist / maxDistance)) * 0.45;
-            ctx.strokeStyle = lineColor.replace(/[\d.]+\)$/g, `${opacity})`);
+            ctx.strokeStyle = lineColorPrefix + opacity + ')';
             ctx.lineWidth = 0.55;
             ctx.beginPath();
             ctx.moveTo(pa.x, pa.y);
@@ -248,7 +263,7 @@ export const ParticleBackground: React.FC = () => {
           if (mouseDistSq < maxMouseDistSq) {
             const dist = Math.sqrt(mouseDistSq);
             const opacity = (1 - (dist / 140)) * 0.65;
-            ctx.strokeStyle = lineColor.replace(/[\d.]+\)$/g, `${opacity})`);
+            ctx.strokeStyle = lineColorPrefix + opacity + ')';
             ctx.lineWidth = 0.75;
             ctx.beginPath();
             ctx.moveTo(pa.x, pa.y);
@@ -271,13 +286,13 @@ export const ParticleBackground: React.FC = () => {
       // 1. Draw glowing background objects (blobs) drifting automatically (all-sections, dark and light)
       if (blobs.length >= 3) {
         blobs[0].update(width, height);
-        blobs[0].draw(ctx, colors.primaryBlob);
+        blobs[0].draw(ctx, colors.primaryBlob, colors.primaryBlob04);
 
         blobs[1].update(width, height);
-        blobs[1].draw(ctx, colors.secondaryBlob);
+        blobs[1].draw(ctx, colors.secondaryBlob, colors.secondaryBlob04);
 
         blobs[2].update(width, height);
-        blobs[2].draw(ctx, colors.tertiaryBlob);
+        blobs[2].draw(ctx, colors.tertiaryBlob, colors.tertiaryBlob04);
       }
 
       // 2. Draw and update interactive particles
@@ -287,7 +302,7 @@ export const ParticleBackground: React.FC = () => {
       }
       
       // 3. Connect particles with glowing matrix lines
-      drawLines(colors.line);
+      drawLines(colors.linePrefix);
       
       animationFrameId = requestAnimationFrame(animate);
     };

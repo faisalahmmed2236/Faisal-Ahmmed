@@ -68,22 +68,23 @@ export function Hero() {
             </span>
           </motion.div>
           
-          {/* Mobile/Tablet Image - Placed right after system online on mobile with normal visibility */}
-          <div className="lg:hidden w-full flex justify-center my-6 [perspective:1000px] z-10">
+          {/* Mobile/Tablet Image - Visible ONLY on screens < lg (Placed just after System badge) */}
+          <div className="lg:hidden w-full flex justify-center my-8 [perspective:1000px] z-10">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.25 }}
-              className="relative w-[220px] sm:w-[280px] aspect-square"
+              className="relative w-[240px] sm:w-[300px] aspect-square group cursor-pointer"
             >
               {/* Frame / Background */}
-              <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent border border-white/20 backdrop-blur-md p-3 shadow-2xl">
+              <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent border border-white/20 backdrop-blur-md p-3 shadow-2xl transition-all duration-500 group-hover:border-theme-p-500/50">
                  <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
+                    <div className="absolute inset-0 bg-theme-p-500 opacity-10 mix-blend-overlay z-10" />
                     <img 
                       referrerPolicy="no-referrer"
                       src={profile.image} 
                       alt={profile.name}
-                      className="w-full h-full object-cover relative z-0"
+                      className="w-full h-full object-cover relative z-0 filter grayscale group-hover:grayscale-0 transition-all duration-700"
                     />
                  </div>
               </div>
@@ -91,6 +92,20 @@ export function Hero() {
               {/* Corner Accents */}
               <div className="absolute -top-3 -left-3 w-10 h-10 border-t-4 border-l-4 border-theme-p-500 rounded-tl-[1.5rem] z-20 pointer-events-none" />
               <div className="absolute -bottom-3 -right-3 w-10 h-10 border-b-4 border-r-4 border-theme-s-500 rounded-br-[1.5rem] z-20 pointer-events-none" />
+              
+              {/* Floating Tech Badge */}
+              <div className="absolute bottom-3 right-0 bg-black/90 backdrop-blur-xl border border-theme-p-500/30 p-2.5 px-3.5 rounded-xl z-30 flex items-center gap-2.5 shadow-2xl scale-90 sm:scale-100 origin-bottom-right">
+                <div className="w-8 h-8 rounded-full bg-theme-p-500/20 flex items-center justify-center text-theme-p-400 shrink-0">
+                  <Terminal size={16} />
+                </div>
+                <div className="text-left">
+                  <p className="text-[9px] text-slate-400 font-mono leading-none mb-1">System Status</p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    <p className="text-xs font-bold text-white uppercase tracking-wider leading-none">Ready to Build</p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
 

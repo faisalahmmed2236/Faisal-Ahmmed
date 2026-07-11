@@ -70,6 +70,20 @@ export function Interactive3DObject() {
       });
     }
 
+    // Precompute constant sphere point connections (constellation lines)
+    const connections: [number, number][] = [];
+    for (let i = 0; i < pointCount; i++) {
+      for (let j = i + 1; j < pointCount; j++) {
+        const dx = spherePoints[i].x - spherePoints[j].x;
+        const dy = spherePoints[i].y - spherePoints[j].y;
+        const dz = spherePoints[i].z - spherePoints[j].z;
+        const dist3d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (dist3d < 95) {
+          connections.push([i, j]);
+        }
+      }
+    }
+
     // Track mouse movement
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -91,21 +105,27 @@ export function Interactive3DObject() {
     let angleX = 0;
     let angleY = 0;
 
-    // Handle resizing
-    const handleResize = () => {
-      if (!containerRef.current || !canvas) return;
-      const dpr = window.devicePixelRatio || 1;
-      const width = containerRef.current.clientWidth;
-      const height = containerRef.current.clientHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.scale(dpr, dpr);
-    };
+    // Use ResizeObserver for responsive sizing instead of window.onresize
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        // Use contentRect or container bounds for high precision
+        const width = entry.contentRect.width || (containerRef.current ? containerRef.current.clientWidth : 0);
+        const height = entry.contentRect.height || (containerRef.current ? containerRef.current.clientHeight : 0);
+        
+        if (width > 0 && height > 0) {
+          const dpr = window.devicePixelRatio || 1;
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          ctx.scale(dpr, dpr);
+        }
+      }
+    });
 
-    window.addEventListener('resize', handleResize);
-    handleResize();
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
 
     // Perspective Projection helper
     const fov = 400;
@@ -143,6 +163,11 @@ export function Interactive3DObject() {
     const render = () => {
       const width = canvas.width / (window.devicePixelRatio || 1);
       const height = canvas.height / (window.devicePixelRatio || 1);
+
+      if (width <= 0 || height <= 0) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
 
       ctx.clearRect(0, 0, width, height);
 
@@ -192,30 +217,22 @@ export function Interactive3DObject() {
         };
       });
 
-      // Draw constellation connections first (behind or front depending on distance)
+      // Draw constellation connections using precomputed connections list (Ultra-fast!)
       ctx.lineWidth = 0.5;
-      for (let i = 0; i < projectedPoints.length; i++) {
+      for (let k = 0; k < connections.length; k++) {
+        const [i, j] = connections[k];
         const p1 = projectedPoints[i];
-        for (let j = i + 1; j < projectedPoints.length; j++) {
-          const p2 = projectedPoints[j];
-          // Check 3D distance between raw points
-          const dx = spherePoints[i].x - spherePoints[j].x;
-          const dy = spherePoints[i].y - spherePoints[j].y;
-          const dz = spherePoints[i].z - spherePoints[j].z;
-          const dist3d = Math.sqrt(dx*dx + dy*dy + dz*dz);
-
-          if (dist3d < 95) {
-            // Fade out lines on the back side of the sphere (z > 0 is deeper in screen)
-            const avgZ = (p1.z + p2.z) / 2;
-            const alphaFactor = Math.max(0.05, Math.min(0.4, 0.4 * (1 - avgZ / sphereRadius)));
-            
-            ctx.strokeStyle = `${secondaryColor}${Math.floor(alphaFactor * 255).toString(16).padStart(2, '0')}`;
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
-        }
+        const p2 = projectedPoints[j];
+        
+        // Fade out lines on the back side of the sphere (z > 0 is deeper in screen)
+        const avgZ = (p1.z + p2.z) / 2;
+        const alphaFactor = Math.max(0.05, Math.min(0.4, 0.4 * (1 - avgZ / sphereRadius)));
+        
+        ctx.strokeStyle = `${secondaryColor}${Math.floor(alphaFactor * 255).toString(16).padStart(2, '0')}`;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
       }
 
       // Draw points with depth sizing
@@ -306,7 +323,7 @@ export function Interactive3DObject() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, [theme, primaryColor, secondaryColor, glowColor]);

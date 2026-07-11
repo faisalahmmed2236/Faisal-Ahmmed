@@ -42,7 +42,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-16 md:pt-20 overflow-hidden">
       {/* Background elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-theme-p-600/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-theme-s-600/20 rounded-full blur-[120px] pointer-events-none" />
@@ -56,12 +56,12 @@ export function Hero() {
       <div className="max-w-7xl mx-auto px-6 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
         
         {/* Text Content */}
-        <div className="flex-1 text-center lg:text-left z-10 pt-12 lg:pt-0">
+        <div className="flex-1 text-center lg:text-left z-10 pt-2 sm:pt-6 lg:pt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center justify-center lg:justify-start gap-2 mb-6"
+            className="flex items-center justify-center lg:justify-start gap-2 mb-4 lg:mb-6"
           >
             <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-theme-p-500/10 border border-theme-p-500/20 text-theme-p-400 text-xs font-bold tracking-widest uppercase">
               <Terminal size={14} /> System Online
@@ -69,7 +69,7 @@ export function Hero() {
           </motion.div>
           
           {/* Mobile/Tablet Image - Visible ONLY on screens < lg (Placed just after System badge) */}
-          <div className="lg:hidden w-full flex justify-center my-8 [perspective:1000px] z-10">
+          <div className="lg:hidden w-full flex justify-center my-4 sm:my-6 [perspective:1000px] z-10">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -143,7 +143,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex lg:hidden items-center justify-center gap-3 text-theme-p-400 font-mono text-base sm:text-lg mb-6 min-h-[2.5rem]"
+            className="flex lg:hidden items-center justify-center gap-3 text-theme-p-400 font-mono text-base sm:text-lg mb-4 sm:mb-6 min-h-[2.5rem]"
           >
             <Code2 size={20} className="animate-pulse text-theme-p-500 shrink-0" />
             <span className="text-center leading-relaxed">
@@ -162,7 +162,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-base sm:text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0"
+            className="text-base sm:text-lg md:text-xl text-slate-400 mb-6 sm:mb-8 lg:mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0"
           >
             {profile.tagline}
           </motion.p>

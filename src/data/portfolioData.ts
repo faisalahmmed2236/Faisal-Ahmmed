@@ -7,6 +7,12 @@ export const portfolioData: PortfolioData = {
     tagline: "Architecting high-performance systems and turning complex problems into elegant, scalable software solutions.",
     bio: "I am a passionate Computer and Software Engineer with deep expertise in full-stack development, system architecture, and algorithms. I thrive at the intersection of robust backend logic and pixel-perfect frontends, creating digital experiences that are as performant as they are beautiful.",
     image: "https://github.com/faisalahmmed2236.png?size=800",
+    typewriterWords: [
+      "I am Faisal Ahmmed",
+      "Computer & Software Engineer",
+      "Web, Mobile & Solutions",
+      "Transforming Data into Insights"
+    ],
     socials: {
       github: "https://github.com/faisalahmmed2236",
       linkedin: "https://www.linkedin.com/in/faisalahmmed2236/",

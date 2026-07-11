@@ -35,9 +35,9 @@ export function ThemeSettings() {
     setDisplayMode(mode);
   };
 
-  const toggleLanguage = () => {
+  const selectLanguage = (lang: 'en' | 'es' | 'bn' | 'ar') => {
     playToggle();
-    setLanguage(language === 'en' ? 'es' : 'en');
+    setLanguage(lang);
   };
 
   const handleOpenPanel = () => {
@@ -188,9 +188,9 @@ export function ThemeSettings() {
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">System Language</p>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => { if (language !== 'en') toggleLanguage(); triggerVibration(hapticPatterns.light); }}
+                        onClick={() => { if (language !== 'en') selectLanguage('en'); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
-                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                        className={`flex-1 py-2 px-1 rounded-xl border text-[11px] font-semibold transition-all cursor-pointer ${
                           language === 'en'
                             ? 'bg-white/10 border-theme-p-500/50 text-white'
                             : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
@@ -199,15 +199,37 @@ export function ThemeSettings() {
                         English
                       </button>
                       <button
-                        onClick={() => { if (language !== 'es') toggleLanguage(); triggerVibration(hapticPatterns.light); }}
+                        onClick={() => { if (language !== 'es') selectLanguage('es'); triggerVibration(hapticPatterns.light); }}
                         onMouseEnter={playHover}
-                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                        className={`flex-1 py-2 px-1 rounded-xl border text-[11px] font-semibold transition-all cursor-pointer ${
                           language === 'es'
                             ? 'bg-white/10 border-theme-p-500/50 text-white'
                             : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
                         }`}
                       >
                         Español
+                      </button>
+                      <button
+                        onClick={() => { if (language !== 'bn') selectLanguage('bn'); triggerVibration(hapticPatterns.light); }}
+                        onMouseEnter={playHover}
+                        className={`flex-1 py-2 px-1 rounded-xl border text-[11px] font-semibold transition-all cursor-pointer ${
+                          language === 'bn'
+                            ? 'bg-white/10 border-theme-p-500/50 text-white'
+                            : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
+                        }`}
+                      >
+                        বাংলা
+                      </button>
+                      <button
+                        onClick={() => { if (language !== 'ar') selectLanguage('ar'); triggerVibration(hapticPatterns.light); }}
+                        onMouseEnter={playHover}
+                        className={`flex-1 py-2 px-1 rounded-xl border text-[11px] font-semibold transition-all cursor-pointer ${
+                          language === 'ar'
+                            ? 'bg-white/10 border-theme-p-500/50 text-white'
+                            : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
+                        }`}
+                      >
+                        العربية
                       </button>
                     </div>
                   </div>

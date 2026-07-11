@@ -15,6 +15,7 @@ import { useMetaTags } from './hooks/useMetaTags';
 import { ScrollProgress } from './components/ScrollProgress';
 
 import { ParticleBackground } from './components/ParticleBackground';
+import { AnalyticsProvider } from './context/AnalyticsContext';
 
 import { About } from './sections/About';
 import { Services } from './sections/Services';
@@ -39,44 +40,46 @@ export default function App() {
   useMetaTags();
   
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-theme-p-500/30">
-      <ParticleBackground />
-      <ScrollProgress />
-      <Navbar />
-      
-      <main>
-        <Hero />
-        <Suspense fallback={<SectionLoader />}>
-          <SectionDivider />
-          <About />
-          <SectionDivider />
-          <Skills />
-          <SectionDivider />
-          <Experience />
-          <SectionDivider />
-          <Services />
-          <SectionDivider />
-          <Projects />
-          <SectionDivider />
-          <Achievements />
-          <SectionDivider />
-          <VisitorInsights />
-          <SectionDivider />
-          <PerformanceDashboard />
-          <SectionDivider />
-          <Testimonials />
-          <SectionDivider />
-          <Contact />
-        </Suspense>
-      </main>
+    <AnalyticsProvider>
+      <div className="min-h-screen bg-background text-foreground selection:bg-theme-p-500/30">
+        <ParticleBackground />
+        <ScrollProgress />
+        <Navbar />
+        
+        <main>
+          <Hero />
+          <Suspense fallback={<SectionLoader />}>
+            <SectionDivider />
+            <About />
+            <SectionDivider />
+            <Skills />
+            <SectionDivider />
+            <Experience />
+            <SectionDivider />
+            <Services />
+            <SectionDivider />
+            <Projects />
+            <SectionDivider />
+            <Achievements />
+            <SectionDivider />
+            <VisitorInsights />
+            <SectionDivider />
+            <PerformanceDashboard />
+            <SectionDivider />
+            <Testimonials />
+            <SectionDivider />
+            <Contact />
+          </Suspense>
+        </main>
 
-      <Suspense fallback={<SectionLoader />}>
-        <Footer />
-      </Suspense>
-      <ThemeSettings />
-      <AIAssistantWidget />
-      <FloatingShareWidget />
-      <ExitIntentModal />
-    </div>
+        <Suspense fallback={<SectionLoader />}>
+          <Footer />
+        </Suspense>
+        <ThemeSettings />
+        <AIAssistantWidget />
+        <FloatingShareWidget />
+        <ExitIntentModal />
+      </div>
+    </AnalyticsProvider>
   );
 }

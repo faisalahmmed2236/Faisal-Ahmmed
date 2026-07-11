@@ -22,7 +22,8 @@ export const ParticleBackground: React.FC = () => {
     };
 
     const handleResize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      // Force extreme sharpness by rendering at a minimum of 2.0x pixel ratio
+      const dpr = Math.max(2, window.devicePixelRatio || 1);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
@@ -55,7 +56,7 @@ export const ParticleBackground: React.FC = () => {
       constructor(width: number, height: number) {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.size = Math.random() * 1.2 + 0.4;
+        this.size = Math.random() * 1.5 + 0.5;
         this.speedX = (Math.random() - 0.5) * 0.5; // slow, elegant motion
         this.speedY = (Math.random() - 0.5) * 0.5;
       }

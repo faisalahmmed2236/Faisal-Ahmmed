@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useMotionValue, useTransform, animate } from 'motion/react';
-import { Eye, MousePointerClick, Globe2, Activity } from 'lucide-react';
+import { motion, useInView, useMotionValue, useTransform, animate, AnimatePresence } from 'motion/react';
+import { Eye, MousePointerClick, Globe2, Activity, Info } from 'lucide-react';
 
 function AnimatedCounter({ value, isTime = false }: { value: number, isTime?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -328,6 +328,7 @@ function CustomBarChart({ data }: { data: ProjectInterestPoint[] }) {
 }
 
 export function VisitorInsights() {
+  const [isHeaderHovered, setIsHeaderHovered] = useState(false);
   const [metrics, setMetrics] = useState([
     { label: 'Total Page Views', value: 12450, increase: '+14%', icon: Eye, isTime: false },
     { label: 'Unique Visitors', value: 8210, increase: '+22%', icon: Globe2, isTime: false },
@@ -377,10 +378,10 @@ export function VisitorInsights() {
     <motion.section 
       id="insights" 
       className="py-6 md:py-10 relative overflow-hidden"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-theme-p-600/10 blur-[120px] rounded-full pointer-events-none" />
@@ -392,32 +393,70 @@ export function VisitorInsights() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center md:text-left flex flex-col items-center md:items-start"
+            className="text-center md:text-left flex flex-col items-center md:items-start relative"
           >
             <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-theme-s-500/10 border border-theme-s-500/20 text-theme-s-400 text-xs font-bold uppercase tracking-widest mb-6">
               <Activity size={14} />
               <span>Platform Analytics</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              Visitor <span className="text-transparent bg-clip-text bg-gradient-to-r from-theme-p-400 to-theme-s-400">Insights</span>
-            </h2>
+            
+            <div 
+              className="relative inline-block cursor-help mb-4"
+              onMouseEnter={() => setIsHeaderHovered(true)}
+              onMouseLeave={() => setIsHeaderHovered(false)}
+            >
+              {/* Tooltip */}
+              <AnimatePresence>
+                {isHeaderHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute bottom-full left-1/2 md:left-0 -translate-x-1/2 md:translate-x-0 mb-4 px-4 py-3 bg-[#0B0B0F]/95 border border-theme-s-500/30 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-xl z-50 w-72 text-center md:text-left flex flex-col gap-1.5"
+                    style={{ filter: "drop-shadow(0 10px 25px rgba(236,72,153,0.15))" }}
+                  >
+                    <div className="flex items-center justify-center md:justify-start gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-theme-s-400">
+                      <Info size={11} className="animate-pulse" />
+                      <span>Section Details</span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed font-sans font-medium">
+                      An interactive, real-time telemetry panel visualizing user demographics, geographic mapping, and system interest.
+                    </p>
+                    <div className="absolute top-full left-1/2 md:left-6 -translate-x-1/2 md:translate-x-0 border-x-6 border-x-transparent border-t-6 border-t-[#0B0B0F]/95" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center md:justify-start gap-2">
+                <span>Visitor <span className="text-transparent bg-clip-text bg-gradient-to-r from-theme-p-400 to-theme-s-400">Insights</span></span>
+                <motion.span
+                  animate={{ opacity: isHeaderHovered ? 1 : 0.35, scale: isHeaderHovered ? 1.1 : 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-theme-s-400 shrink-0 hidden sm:inline"
+                >
+                  <Info size={18} />
+                </motion.span>
+              </h2>
+            </div>
+
             <p className="text-slate-400 max-w-lg text-lg mx-auto md:mx-0">
               Real-time portfolio telemetry and engagement metrics visualized.
             </p>
           </motion.div>
         </div>
 
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-          {metrics.map((metric, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="glass-panel p-4 sm:p-6 rounded-2xl relative overflow-hidden group"
-            >
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            {metrics.map((metric, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] as any }}
+                className="glass-panel p-4 sm:p-6 rounded-2xl relative overflow-hidden group"
+              >
               <div className="absolute inset-0 bg-gradient-to-br from-theme-p-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex justify-between items-start mb-4">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-300">
@@ -439,10 +478,10 @@ export function VisitorInsights() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Traffic Chart */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] as any }}
             className="lg:col-span-2 glass-panel p-6 rounded-2xl"
           >
             <div className="mb-6">
@@ -456,10 +495,10 @@ export function VisitorInsights() {
 
           {/* Project Interest Chart */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.7, delay: 0.22, ease: [0.16, 1, 0.3, 1] as any }}
             className="glass-panel p-6 rounded-2xl flex flex-col"
           >
             <div className="mb-6">

@@ -6,12 +6,14 @@ import { SectionHeading } from '../components/SectionHeading';
 import { getReadingTime } from '../utils/readingTime';
 import { ProjectImpact } from '../components/ProjectImpact';
 import { triggerVibration, hapticPatterns } from '../lib/haptics';
+import { useTrackSection } from '../hooks/useTrackSection';
 
 export function Projects() {
   const { portfolioData } = useLanguage();
   const { projects } = portfolioData;
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
+  const trackerRef = useTrackSection('projects');
 
   const allTechs = useMemo(() => {
     const techs = new Set<string>();
@@ -32,12 +34,13 @@ export function Projects() {
 
   return (
     <motion.section 
+      ref={trackerRef as any}
       id="projects" 
       className="py-6 md:py-10 relative"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="max-w-7xl mx-auto px-6">
         <SectionHeading title="Featured Deployments" subtitle="A showcase of recent projects highlighting my expertise." readTime="4 min" />
@@ -111,8 +114,8 @@ export function Projects() {
                   layout
                   key={project.id}
                   variants={{
-                    hidden: { opacity: 0, y: 45, scale: 0.98 },
-                    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.85, ease: "easeOut" as any } },
+                    hidden: { opacity: 0, y: 15, scale: 0.98 },
+                    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } },
                     exit: { opacity: 0, scale: 0.95 }
                   }}
                   exit="exit"

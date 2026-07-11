@@ -230,12 +230,12 @@ export function AIAssistantWidget() {
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h3 className="font-bold text-sm tracking-wide text-white">Faisal's Elite Agent</h3>
-                    <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold uppercase tracking-wider bg-theme-p-500/10 text-theme-p-400 border border-theme-p-500/20">Pro</span>
+                    <h3 className="font-bold text-sm tracking-wide text-white">Faisal's Agent</h3>
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">Premium</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Sparkles size={10} className="text-theme-p-400 animate-pulse" />
-                    <span className="text-[10px] text-slate-400 font-medium tracking-wide">Powered by Gemini 3.5 Flash</span>
+                    <span className="text-[10px] text-slate-400 font-medium tracking-wide">Pro Advanced Level Brain</span>
                   </div>
                 </div>
               </div>
@@ -243,7 +243,7 @@ export function AIAssistantWidget() {
                 <button 
                   onClick={() => {
                     triggerVibration(hapticPatterns.light);
-                    setMessages([{ id: '1', role: 'assistant', content: "Hi there! I'm **Faisal's Elite AI Agent**. Ask me about my experience, system architectures, full-stack dev services, or deep learning projects. I am ready to schedule consultations and outline software blueprints for you!" }]);
+                    setMessages([{ id: '1', role: 'assistant', content: "Hi there! I'm **Faisal's Agent**. Ask me about my experience, system architectures, full-stack dev services, or deep learning projects. I am ready to schedule consultations and outline software blueprints for you!" }]);
                   }}
                   className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                   title="Reset Conversation"

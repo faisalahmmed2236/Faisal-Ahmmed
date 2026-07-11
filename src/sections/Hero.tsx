@@ -128,7 +128,7 @@ export function Hero() {
             <Code2 size={24} className="animate-pulse hidden sm:block text-theme-p-500" />
             <span className="text-left leading-relaxed">
               <GlitchTypewriter 
-                words={[
+                words={profile.typewriterWords || [
                   "I am Faisal Ahmmed",
                   profile.role,
                   "Web, Mobile & Solutions",
@@ -148,7 +148,7 @@ export function Hero() {
             <Code2 size={20} className="animate-pulse text-theme-p-500 shrink-0" />
             <span className="text-center leading-relaxed">
               <GlitchTypewriter 
-                words={[
+                words={profile.typewriterWords || [
                   "I am Faisal Ahmmed",
                   profile.role,
                   "Web, Mobile & Solutions",

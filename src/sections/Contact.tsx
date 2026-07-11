@@ -12,30 +12,30 @@ export function Contact() {
     <motion.section 
       id="contact" 
       className="py-10 md:py-16 relative"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-theme-p-900/10 -z-10" />
       
       <div className="max-w-4xl mx-auto px-6 text-center">
         <div className="space-y-8">
           <motion.h2 
-            initial={{ opacity: 0, y: 40, letterSpacing: '-0.04em' }}
+            initial={{ opacity: 0, y: 15, letterSpacing: '-0.04em' }}
             whileInView={{ opacity: 1, y: 0, letterSpacing: '-0.02em' }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" as any }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
             className="text-5xl md:text-7xl font-black tracking-tight text-white leading-tight"
           >
             Let's build something <span className="text-gradient">extraordinary.</span>
           </motion.h2>
           
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" as any }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] as any }}
             className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
           >
             Currently accepting new projects and full-time opportunities. 
@@ -43,10 +43,10 @@ export function Contact() {
           </motion.p>
           
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" as any }}
+            transition={{ duration: 0.8, delay: 0.18, ease: [0.16, 1, 0.3, 1] as any }}
           >
             <motion.a 
               href={`mailto:${profile.socials.email}`}

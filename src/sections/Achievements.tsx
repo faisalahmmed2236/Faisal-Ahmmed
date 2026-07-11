@@ -12,10 +12,10 @@ export function Achievements() {
     <motion.section 
       id="achievements" 
       className="py-6 md:py-10 relative bg-black/20"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="max-w-4xl mx-auto px-6">
         <SectionHeading title="Career Milestones" subtitle="Key accomplishments throughout my career journey." readTime="1 min" />
@@ -24,10 +24,10 @@ export function Achievements() {
           {achievements.map((achievement, index) => (
             <motion.div 
               key={achievement.id}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30, y: 15 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              initial={{ opacity: 0, y: 15, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-20px" }}
-              transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" as any }}
+              transition={{ duration: 0.75, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] as any }}
               className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
             >
               <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-[#0A0A0C] text-theme-p-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">

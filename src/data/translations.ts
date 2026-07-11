@@ -1,5 +1,7 @@
 import { PortfolioData } from '../types';
 import { portfolioData as enData } from './portfolioData';
+import { bnData } from './bnData';
+import { arData } from './arData';
 
 export const esData: PortfolioData = {
   profile: {
@@ -8,6 +10,12 @@ export const esData: PortfolioData = {
     tagline: "Diseñando sistemas de alto rendimiento y convirtiendo problemas complejos en soluciones de software elegantes y escalables.",
     bio: "Soy un Ingeniero de Software y Computación apasionado con profunda experiencia en desarrollo full-stack, arquitectura de sistemas y algoritmos. Prospero en la intersección de una lógica backend robusta e interfaces frontend perfectas al píxel, creando experiencias digitales que son tan funcionales como hermosas.",
     image: "https://github.com/faisalahmmed2236.png?size=800",
+    typewriterWords: [
+      "Soy Faisal Ahmmed",
+      "Ingeniero de Software y Computación",
+      "Web, Móvil y Soluciones",
+      "Transformando Datos en Conocimiento"
+    ],
     socials: {
       github: "https://github.com/faisalahmmed2236",
       linkedin: "https://www.linkedin.com/in/faisalahmmed2236/",
@@ -266,7 +274,9 @@ export const esData: PortfolioData = {
 
 export const translations = {
   en: enData,
-  es: esData
+  es: esData,
+  bn: bnData,
+  ar: arData
 };
 
 export type Language = keyof typeof translations;

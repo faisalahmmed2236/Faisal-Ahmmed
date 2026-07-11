@@ -52,7 +52,8 @@ export function Navbar() {
   const toggleLanguage = () => {
     triggerVibration(hapticPatterns.light);
     playToggle();
-    setLanguage(language === 'en' ? 'es' : 'en');
+    const nextLang = language === 'en' ? 'es' : language === 'es' ? 'bn' : language === 'bn' ? 'ar' : 'en';
+    setLanguage(nextLang);
   };
 
   const toggleMode = () => {

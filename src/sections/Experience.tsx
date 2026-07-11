@@ -4,11 +4,13 @@ import { useLanguage } from '../context/LanguageContext';
 import { triggerVibration, hapticPatterns } from '../lib/haptics';
 import { SectionHeading } from '../components/SectionHeading';
 import { Briefcase, Calendar, GraduationCap } from 'lucide-react';
+import { useTrackSection } from '../hooks/useTrackSection';
 
 export function Experience() {
   const { portfolioData } = useLanguage();
   const { experiences, education } = portfolioData;
   const [activeTab, setActiveTab] = useState<'experience' | 'education'>('experience');
+  const trackerRef = useTrackSection('experience');
 
   const hasExperience = experiences && experiences.length > 0;
   const hasEducation = education && education.length > 0;
@@ -17,12 +19,13 @@ export function Experience() {
 
   return (
     <motion.section 
+      ref={trackerRef as any}
       id="experience" 
       className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="absolute top-1/2 right-0 w-[40%] h-[40%] bg-theme-p-600/10 rounded-full blur-[120px] pointer-events-none" />
       
@@ -82,8 +85,8 @@ export function Experience() {
                 <motion.div 
                   key={exp.id}
                   variants={{
-                    hidden: { opacity: 0, x: idx % 2 === 0 ? -40 : 40, y: 15 },
-                    show: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, ease: "easeOut" as any } }
+                    hidden: { opacity: 0, y: 15, scale: 0.98 },
+                    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any } }
                   }}
                   className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
                 >
@@ -151,8 +154,8 @@ export function Experience() {
                 <motion.div 
                   key={edu.id}
                   variants={{
-                    hidden: { opacity: 0, x: idx % 2 === 0 ? -40 : 40, y: 15 },
-                    show: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, ease: "easeOut" as any } }
+                    hidden: { opacity: 0, y: 15, scale: 0.98 },
+                    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any } }
                   }}
                   className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
                 >

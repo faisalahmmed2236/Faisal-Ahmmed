@@ -12,10 +12,10 @@ export function Testimonials() {
     <motion.section 
       id="testimonials" 
       className="py-6 md:py-10 relative overflow-hidden"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-theme-p-500/20 to-transparent -z-10" />
       
@@ -26,10 +26,10 @@ export function Testimonials() {
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 15, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.75, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] as any }}
               className="bg-gradient-to-br from-theme-p-500/10 to-transparent border border-white/5 p-8 rounded-3xl relative flex flex-col h-full text-center md:text-left"
             >
               <Quote className="absolute top-8 right-8 text-white/5" size={64} />

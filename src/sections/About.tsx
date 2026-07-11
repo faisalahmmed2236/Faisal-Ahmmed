@@ -4,6 +4,7 @@ import { Clock, Github, Linkedin, Twitter, Mail, Phone, MessageCircle, Facebook,
 import { useLanguage } from '../context/LanguageContext';
 import { SectionHeading } from '../components/SectionHeading';
 import { getReadingTime } from '../utils/readingTime';
+import { useTrackSection } from '../hooks/useTrackSection';
 
 const getPlatformIcon = (platform: string) => {
   switch (platform.toLowerCase()) {
@@ -21,25 +22,27 @@ const getPlatformIcon = (platform: string) => {
 export function About() {
   const { portfolioData } = useLanguage();
   const { profile } = portfolioData;
+  const trackerRef = useTrackSection('about');
 
   return (
     <motion.section 
+      ref={trackerRef as any}
       id="about" 
       className="py-6 md:py-10 relative"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="max-w-7xl mx-auto px-6">
         <SectionHeading title="Core Capabilities" subtitle="A brief introduction to who I am and what I do." readTime="2 min" />
         
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
           >
             <div className="bg-white/5 border border-white/5 p-8 md:p-12 rounded-3xl relative overflow-hidden text-center md:text-left">
                <div className="absolute top-0 right-0 w-64 h-64 bg-theme-p-600/10 rounded-full blur-[80px]" />
@@ -90,10 +93,10 @@ export function About() {
           
           {/* Decorative Elements */}
           <motion.div
-             initial={{ opacity: 0, x: 20 }}
-             whileInView={{ opacity: 1, x: 0 }}
+             initial={{ opacity: 0, y: 15 }}
+             whileInView={{ opacity: 1, y: 0 }}
              viewport={{ once: true }}
-             transition={{ duration: 0.5, delay: 0.2 }}
+             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] as any }}
              className="grid grid-cols-2 gap-4"
           >
             <div className="bg-white/5 border border-white/5 p-6 rounded-3xl flex flex-col justify-center text-center">

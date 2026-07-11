@@ -34,8 +34,8 @@ export function Interactive3DObject() {
 
   useEffect(() => {
     // Generate sphere points using Fibonacci Golden Spiral for perfect distribution
-    const pointCount = 100;
-    const sphereRadius = 130;
+    const pointCount = 150;
+    const sphereRadius = 135;
     const spherePoints: Point3D[] = [];
 
     for (let i = 0; i < pointCount; i++) {
@@ -50,9 +50,9 @@ export function Interactive3DObject() {
     // Generate orbiting ring points
     const ring1Points: Point3D[] = [];
     const ring2Points: Point3D[] = [];
-    const ringCount = 72;
-    const ring1Radius = 180;
-    const ring2Radius = 220;
+    const ringCount = 100;
+    const ring1Radius = 185;
+    const ring2Radius = 225;
 
     for (let i = 0; i < ringCount; i++) {
       const angle = (i / ringCount) * Math.PI * 2;
@@ -78,7 +78,7 @@ export function Interactive3DObject() {
         const dy = spherePoints[i].y - spherePoints[j].y;
         const dz = spherePoints[i].z - spherePoints[j].z;
         const dist3d = Math.sqrt(dx*dx + dy*dy + dz*dz);
-        if (dist3d < 95) {
+        if (dist3d < 85) {
           connections.push([i, j]);
         }
       }
@@ -113,7 +113,8 @@ export function Interactive3DObject() {
         const height = entry.contentRect.height || (containerRef.current ? containerRef.current.clientHeight : 0);
         
         if (width > 0 && height > 0) {
-          const dpr = window.devicePixelRatio || 1;
+          // Force high resolution pixel density (at least 2.0 DPR) for extreme rendering crispness
+          const dpr = Math.max(2, window.devicePixelRatio || 1);
           canvas.width = width * dpr;
           canvas.height = height * dpr;
           canvas.style.width = `${width}px`;
@@ -161,8 +162,9 @@ export function Interactive3DObject() {
     };
 
     const render = () => {
-      const width = canvas.width / (window.devicePixelRatio || 1);
-      const height = canvas.height / (window.devicePixelRatio || 1);
+      const dpr = Math.max(2, window.devicePixelRatio || 1);
+      const width = canvas.width / dpr;
+      const height = canvas.height / dpr;
 
       if (width <= 0 || height <= 0) {
         animationFrameId = requestAnimationFrame(render);

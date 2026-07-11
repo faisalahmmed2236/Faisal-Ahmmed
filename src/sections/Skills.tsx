@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Terminal, Database, Wrench, Brain } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { SectionHeading } from '../components/SectionHeading';
+import { useTrackSection } from '../hooks/useTrackSection';
 
 const getCategoryIcon = (category: string) => {
   if (category.toLowerCase().includes('ai') || category.toLowerCase().includes('ia') || category.toLowerCase().includes('deep')) return <Brain size={20} />;
@@ -26,17 +27,19 @@ const barVariants = {
 export function Skills() {
   const { portfolioData } = useLanguage();
   const skills = portfolioData.skills;
+  const trackerRef = useTrackSection('skills');
 
   if (!skills || skills.length === 0) return null;
 
   return (
     <motion.section 
+      ref={trackerRef as any}
       id="skills" 
       className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.6, ease: "easeOut" as any }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-theme-p-600/5 blur-[120px] pointer-events-none rounded-full" />
       
@@ -58,8 +61,8 @@ export function Skills() {
           <motion.div 
             key={groupIdx}
             variants={{
-              hidden: { opacity: 0, y: 35, scale: 0.97 },
-              show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" as any } }
+              hidden: { opacity: 0, y: 15, scale: 0.98 },
+              show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } }
             }}
             className="flex flex-col gap-6 bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl relative overflow-hidden group hover:border-theme-p-500/50 transition-colors"
           >

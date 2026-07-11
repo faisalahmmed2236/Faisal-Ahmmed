@@ -5,6 +5,7 @@ export interface ProfileData {
   bio: string;
   image: string;
   resumeUrl?: string;
+  typewriterWords?: string[];
   socials: {
     github: string;
     linkedin: string;

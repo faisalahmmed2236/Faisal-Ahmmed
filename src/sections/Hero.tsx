@@ -42,7 +42,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-start lg:items-center pt-14 sm:pt-20 lg:pt-24 pb-8 lg:pb-0 overflow-hidden">
+    <section className="relative min-h-screen flex items-start lg:items-center pt-20 sm:pt-24 lg:pt-20 pb-12 lg:pb-0 overflow-hidden">
       {/* Background elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-theme-p-600/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-theme-s-600/20 rounded-full blur-[120px] pointer-events-none" />
@@ -56,12 +56,12 @@ export function Hero() {
       <div className="max-w-7xl mx-auto px-6 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
         
         {/* Text Content */}
-        <div className="flex-1 text-center lg:text-left z-10 pt-0 lg:pt-0">
+        <div className="flex-1 text-center lg:text-left z-10 pt-2 sm:pt-6 lg:pt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center justify-center lg:justify-start gap-2 mb-3 lg:mb-6"
+            className="flex items-center justify-center lg:justify-start gap-2 mb-4 lg:mb-6"
           >
             <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-theme-p-500/10 border border-theme-p-500/20 text-theme-p-400 text-xs font-bold tracking-widest uppercase">
               <Terminal size={14} /> System Online
@@ -69,15 +69,15 @@ export function Hero() {
           </motion.div>
           
           {/* Mobile/Tablet Image - Visible ONLY on screens < lg (Placed just after System badge) */}
-          <div className="lg:hidden w-full flex justify-center my-2 sm:my-4 [perspective:1000px] z-10">
+          <div className="lg:hidden w-full flex justify-center my-4 sm:my-6 [perspective:1000px] z-10">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.25 }}
-              className="relative w-[170px] sm:w-[240px] aspect-square group cursor-pointer"
+              className="relative w-[240px] sm:w-[300px] aspect-square group cursor-pointer"
             >
               {/* Frame / Background */}
-              <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent border border-white/20 backdrop-blur-md p-2.5 shadow-2xl transition-all duration-500 group-hover:border-theme-p-500/50">
+              <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent border border-white/20 backdrop-blur-md p-3 shadow-2xl transition-all duration-500 group-hover:border-theme-p-500/50">
                  <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
                     <div className="absolute inset-0 bg-theme-p-500 opacity-10 mix-blend-overlay z-10" />
                     <img 
@@ -113,7 +113,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 sm:mb-4 leading-tight tracking-tight text-white text-center lg:text-left"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-white"
           >
             {profile.name}
           </motion.h1>
@@ -143,8 +143,9 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex lg:hidden items-center justify-center text-theme-p-400 font-mono text-sm sm:text-base md:text-lg mb-3 sm:mb-4 min-h-[2.2rem]"
+            className="flex lg:hidden items-center justify-center gap-3 text-theme-p-400 font-mono text-base sm:text-lg mb-4 sm:mb-6 min-h-[2.5rem]"
           >
+            <Code2 size={20} className="animate-pulse text-theme-p-500 shrink-0" />
             <span className="text-center leading-relaxed">
               <GlitchTypewriter 
                 words={[
@@ -161,7 +162,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-sm sm:text-base md:text-lg text-slate-400 mb-5 sm:mb-8 lg:mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0 text-center lg:text-left"
+            className="text-base sm:text-lg md:text-xl text-slate-400 mb-6 sm:mb-8 lg:mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0"
           >
             {profile.tagline}
           </motion.p>
@@ -170,24 +171,24 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center lg:justify-start w-full max-w-sm mx-auto lg:mx-0 sm:max-w-none px-4 sm:px-0"
+            className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start w-full max-w-sm mx-auto lg:mx-0 sm:max-w-none px-4 sm:px-0"
           >
             <motion.a 
               href="#projects"
                onClick={() => triggerVibration(hapticPatterns.light)} 
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.03, boxShadow: "0 0 25px rgba(255, 255, 255, 0.15)" }}
-              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-2xl bg-gradient-to-r from-theme-p-500 to-theme-s-500 text-white text-sm sm:text-base font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-theme-p-500 to-theme-s-500 text-white font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg"
             >
-              View Projects <ArrowRight size={18} />
+              View Projects <ArrowRight size={20} />
             </motion.a>
             <motion.button 
               onClick={() => { generateResume(portfolioData); triggerVibration(hapticPatterns.medium); }}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.03, backgroundColor: "rgba(255,255,255,0.08)" }}
-              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-2xl bg-white/5 border border-white/10 text-white text-sm sm:text-base font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
             >
-              Download CV <Download size={18} />
+              Download CV <Download size={20} />
             </motion.button>
           </motion.div>
         </div>

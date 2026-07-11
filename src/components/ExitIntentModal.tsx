@@ -10,10 +10,22 @@ export function ExitIntentModal() {
   const { portfolioData } = useLanguage();
   const { profile } = portfolioData;
 
+  const [isTimePassed, setIsTimePassed] = useState(false);
+
+  useEffect(() => {
+    // Wait at least 8 seconds before enabling the exit-intent popup
+    const timer = setTimeout(() => {
+      setIsTimePassed(true);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     const handleMouseLeave = (e: MouseEvent) => {
-      // Trigger when cursor leaves the top of the viewport (y < 10)
-      if (e.clientY < 10 && !hasTriggered) {
+      // Trigger only when cursor leaves the top of the viewport (y < 15) and time threshold has passed
+      // This prevents triggers when moving cursor to side panels or immediately upon load
+      if (e.clientY < 15 && !hasTriggered && isTimePassed) {
         setIsOpen(true);
         setHasTriggered(true);
         triggerVibration(hapticPatterns.medium);
@@ -28,12 +40,14 @@ export function ExitIntentModal() {
       return;
     }
 
-    document.addEventListener('mouseleave', handleMouseLeave);
+    if (isTimePassed) {
+      document.addEventListener('mouseleave', handleMouseLeave);
+    }
     
     return () => {
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [hasTriggered]);
+  }, [hasTriggered, isTimePassed]);
 
   const closeModal = () => {
     setIsOpen(false);

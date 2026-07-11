@@ -12,6 +12,7 @@ export const ParticleBackground: React.FC = () => {
 
     let animationFrameId: number;
     let particles: Particle[] = [];
+    let blobs: GlowBlob[] = [];
     
     // Track mouse position
     const mouse = {
@@ -21,8 +22,12 @@ export const ParticleBackground: React.FC = () => {
     };
 
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
       init();
     };
 
@@ -47,37 +52,36 @@ export const ParticleBackground: React.FC = () => {
       speedX: number;
       speedY: number;
 
-      constructor(canvasWidth: number, canvasHeight: number) {
-        this.x = Math.random() * canvasWidth;
-        this.y = Math.random() * canvasHeight;
-        this.size = Math.random() * 1.5 + 0.5;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
+      constructor(width: number, height: number) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 1.2 + 0.4;
+        this.speedX = (Math.random() - 0.5) * 0.5; // slow, elegant motion
+        this.speedY = (Math.random() - 0.5) * 0.5;
       }
 
-      update(canvasWidth: number, canvasHeight: number) {
+      update(width: number, height: number) {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Bounce off edges
-        if (this.x > canvasWidth || this.x < 0) this.speedX = -this.speedX;
-        if (this.y > canvasHeight || this.y < 0) this.speedY = -this.speedY;
+        // Wrap around instead of hard bounce for organic flow
+        if (this.x > width) this.x = 0;
+        else if (this.x < 0) this.x = width;
 
-        // Interactive mouse repel
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (this.y > height) this.y = 0;
+        else if (this.y < 0) this.y = height;
 
-        if (distance < mouse.radius) {
-          const forceDirectionX = dx / distance;
-          const forceDirectionY = dy / distance;
-          const maxDistance = mouse.radius;
-          const force = (maxDistance - distance) / maxDistance;
-          const directionX = forceDirectionX * force * 2;
-          const directionY = forceDirectionY * force * 2;
+        // Interactive mouse repel (subtle push)
+        if (mouse.x > 0 && mouse.y > 0) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
-          this.x -= directionX;
-          this.y -= directionY;
+          if (distance < mouse.radius) {
+            const force = (mouse.radius - distance) / mouse.radius;
+            this.x -= (dx / distance) * force * 1.5;
+            this.y -= (dy / distance) * force * 1.5;
+          }
         }
       }
 
@@ -85,99 +89,218 @@ export const ParticleBackground: React.FC = () => {
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
         ctx.fill();
       }
     }
 
+    class GlowBlob {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      angle: number;
+      speed: number;
+      amplitude: number;
+
+      constructor(width: number, height: number, radius: number) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.radius = radius;
+        this.vx = (Math.random() - 0.5) * 0.15;
+        this.vy = (Math.random() - 0.5) * 0.15;
+        this.angle = Math.random() * Math.PI * 2;
+        this.speed = 0.0005 + Math.random() * 0.001;
+        this.amplitude = 15 + Math.random() * 25;
+      }
+
+      update(width: number, height: number) {
+        // Slow organic floating movement
+        this.x += this.vx + Math.sin(this.angle) * 0.05;
+        this.y += this.vy + Math.cos(this.angle) * 0.05;
+        this.angle += this.speed;
+
+        // Soft bounce at boundary with padding
+        const pad = -this.radius / 2;
+        if (this.x < pad || this.x > width - pad) this.vx = -this.vx;
+        if (this.y < pad || this.y > height - pad) this.vy = -this.vy;
+      }
+
+      draw(ctx: CanvasRenderingContext2D, color: string) {
+        ctx.save();
+        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+        grad.addColorStop(0, color);
+        grad.addColorStop(0.5, color.replace(/[\d.]+\)$/g, '0.04)'));
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
     const init = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      // Particles setup (optimized for speed and density)
       particles = [];
-      // Adjust density based on screen size
-      const numberOfParticles = Math.min(Math.floor((canvas.width * canvas.height) / 12000), 100);
+      const numberOfParticles = Math.min(Math.floor((width * height) / 24000), 45);
       for (let i = 0; i < numberOfParticles; i++) {
-        particles.push(new Particle(canvas.width, canvas.height));
+        particles.push(new Particle(width, height));
+      }
+
+      // Background decorative glowing objects (blobs) that drift automatically
+      // Generates 3 large beautiful blobs
+      blobs = [
+        new GlowBlob(width, height, Math.min(width * 0.35, 350)),
+        new GlowBlob(width, height, Math.min(width * 0.3, 280)),
+        new GlowBlob(width, height, Math.min(width * 0.25, 220)),
+      ];
+    };
+
+    // Ultra-fast direct theme config retrieval
+    const getColors = () => {
+      const isLight = document.documentElement.getAttribute('data-mode') === 'light';
+      const themeAttr = document.documentElement.getAttribute('data-theme') || 'default';
+
+      if (isLight) {
+        // Light mode needs beautiful soft blue background elements
+        return {
+          primaryBlob: 'rgba(59, 130, 246, 0.12)',     // Blue-500 equivalent in dark
+          secondaryBlob: 'rgba(96, 165, 250, 0.10)',   // Sky-400 equivalent in dark
+          tertiaryBlob: 'rgba(147, 51, 234, 0.08)',    // Purple
+          particle: 'rgba(59, 130, 246, 0.25)',
+          line: 'rgba(59, 130, 246, 0.08)'
+        };
+      }
+
+      // Dark mode theme selections
+      switch (themeAttr) {
+        case 'emerald':
+          return {
+            primaryBlob: 'rgba(16, 185, 129, 0.12)',   // Emerald
+            secondaryBlob: 'rgba(20, 184, 166, 0.10)', // Teal
+            tertiaryBlob: 'rgba(6, 182, 212, 0.08)',   // Cyan
+            particle: 'rgba(16, 185, 129, 0.25)',
+            line: 'rgba(16, 185, 129, 0.08)'
+          };
+        case 'rose':
+          return {
+            primaryBlob: 'rgba(244, 63, 94, 0.12)',    // Rose
+            secondaryBlob: 'rgba(249, 115, 22, 0.10)',  // Orange
+            tertiaryBlob: 'rgba(236, 72, 153, 0.08)',  // Pink
+            particle: 'rgba(244, 63, 94, 0.25)',
+            line: 'rgba(244, 63, 94, 0.08)'
+          };
+        case 'blue':
+          return {
+            primaryBlob: 'rgba(59, 130, 246, 0.12)',   // Blue
+            secondaryBlob: 'rgba(6, 182, 212, 0.10)',  // Cyan
+            tertiaryBlob: 'rgba(139, 92, 246, 0.08)',  // Purple
+            particle: 'rgba(59, 130, 246, 0.25)',
+            line: 'rgba(59, 130, 246, 0.08)'
+          };
+        default: // Indigo/Purple default
+          return {
+            primaryBlob: 'rgba(99, 102, 241, 0.12)',   // Indigo
+            secondaryBlob: 'rgba(168, 85, 247, 0.10)', // Purple
+            tertiaryBlob: 'rgba(236, 72, 153, 0.08)',  // Pink
+            particle: 'rgba(99, 102, 241, 0.25)',
+            line: 'rgba(99, 102, 241, 0.08)'
+          };
       }
     };
 
-    let currentThemeColor = 'rgba(255, 255, 255, 0.3)';
+    const drawLines = (lineColor: string) => {
+      // Fast path connecting particles (optimized double-loop distance threshold)
+      const maxDistance = 110;
+      const maxDistanceSq = maxDistance * maxDistance;
 
-    const updateThemeColor = () => {
-      const dummy = document.createElement('div');
-      dummy.className = 'text-theme-p-500';
-      dummy.style.display = 'none';
-      document.body.appendChild(dummy);
-      
-      const computedColor = getComputedStyle(dummy).color;
-      document.body.removeChild(dummy);
-
-      if (computedColor) {
-        if (computedColor.startsWith('rgb(')) {
-          currentThemeColor = computedColor.replace('rgb(', 'rgba(').replace(')', ', 0.3)');
-        } else if (computedColor.startsWith('rgba(')) {
-          const parts = computedColor.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([0-9.]+)\)/);
-          if (parts) {
-            currentThemeColor = `rgba(${parts[1]}, ${parts[2]}, ${parts[3]}, 0.3)`;
-          }
-        }
-      }
-    };
-
-    const drawLines = () => {
       for (let a = 0; a < particles.length; a++) {
-        for (let b = a; b < particles.length; b++) {
-          const dx = particles[a].x - particles[b].x;
-          const dy = particles[a].y - particles[b].y;
-          const distance = dx * dx + dy * dy;
+        const pa = particles[a];
+        for (let b = a + 1; b < particles.length; b++) {
+          const pb = particles[b];
+          const dx = pa.x - pb.x;
+          const dy = pa.y - pb.y;
+          const distSq = dx * dx + dy * dy;
           
-          if (distance < 12000) {
-            const opacity = 1 - (distance / 12000);
-            const lineColor = currentThemeColor.replace(/[\d.]+\)$/g, `${opacity * 0.5})`);
-            ctx.strokeStyle = lineColor;
-            ctx.lineWidth = 0.5;
+          if (distSq < maxDistanceSq) {
+            const dist = Math.sqrt(distSq);
+            const opacity = (1 - (dist / maxDistance)) * 0.45;
+            ctx.strokeStyle = lineColor.replace(/[\d.]+\)$/g, `${opacity})`);
+            ctx.lineWidth = 0.55;
             ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.moveTo(pa.x, pa.y);
+            ctx.lineTo(pb.x, pb.y);
             ctx.stroke();
           }
         }
         
-        // Connect to mouse
-        const mouseDx = particles[a].x - mouse.x;
-        const mouseDy = particles[a].y - mouse.y;
-        const mouseDistance = mouseDx * mouseDx + mouseDy * mouseDy;
-        
-        if (mouseDistance < 20000) {
-          const opacity = 1 - (mouseDistance / 20000);
-          const lineColor = currentThemeColor.replace(/[\d.]+\)$/g, `${opacity * 0.8})`);
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = 0.8;
-          ctx.beginPath();
-          ctx.moveTo(particles[a].x, particles[a].y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.stroke();
+        // Dynamic interactive connection to cursor
+        if (mouse.x > 0 && mouse.y > 0) {
+          const mouseDx = pa.x - mouse.x;
+          const mouseDy = pa.y - mouse.y;
+          const mouseDistSq = mouseDx * mouseDx + mouseDy * mouseDy;
+          const maxMouseDistSq = 140 * 140;
+          
+          if (mouseDistSq < maxMouseDistSq) {
+            const dist = Math.sqrt(mouseDistSq);
+            const opacity = (1 - (dist / 140)) * 0.65;
+            ctx.strokeStyle = lineColor.replace(/[\d.]+\)$/g, `${opacity})`);
+            ctx.lineWidth = 0.75;
+            ctx.beginPath();
+            ctx.moveTo(pa.x, pa.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
         }
       }
     };
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       
+      ctx.clearRect(0, 0, width, height);
+
+      // Get real-time colors based on theme and light/dark status
+      const colors = getColors();
+
+      // 1. Draw glowing background objects (blobs) drifting automatically (all-sections, dark and light)
+      if (blobs.length >= 3) {
+        blobs[0].update(width, height);
+        blobs[0].draw(ctx, colors.primaryBlob);
+
+        blobs[1].update(width, height);
+        blobs[1].draw(ctx, colors.secondaryBlob);
+
+        blobs[2].update(width, height);
+        blobs[2].draw(ctx, colors.tertiaryBlob);
+      }
+
+      // 2. Draw and update interactive particles
       for (let i = 0; i < particles.length; i++) {
-        particles[i].update(canvas.width, canvas.height);
-        particles[i].draw(ctx, currentThemeColor);
+        particles[i].update(width, height);
+        particles[i].draw(ctx, colors.particle);
       }
       
-      drawLines();
+      // 3. Connect particles with glowing matrix lines
+      drawLines(colors.line);
       
       animationFrameId = requestAnimationFrame(animate);
     };
 
+    // Initialize & Start
     handleResize();
-    updateThemeColor();
     animate();
 
-    const observer = new MutationObserver(updateThemeColor);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    // Listen to changes in data-theme or data-mode dynamically
+    const observer = new MutationObserver(() => {
+      // Force instant update on mode or theme switches
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-mode'] });
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -191,8 +314,8 @@ export const ParticleBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: 0.6 }}
+      className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-500"
+      style={{ opacity: 0.85 }}
       aria-hidden="true"
     />
   );

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useMotionValue, useTransform, animate } from 'motion/react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
 import { Eye, MousePointerClick, Globe2, Activity } from 'lucide-react';
 
 function AnimatedCounter({ value, isTime = false }: { value: number, isTime?: boolean }) {
@@ -60,6 +59,273 @@ const initialProjectInterestData = [
   { name: 'Finance App', clicks: 180 },
   { name: 'Social Platform', clicks: 90 },
 ];
+
+interface TrafficDataPoint {
+  name: string;
+  views: number;
+  unique: number;
+}
+
+function CustomAreaChart({ data }: { data: TrafficDataPoint[] }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+  const width = 500;
+  const height = 250;
+
+  const chartWidth = width - margin.left - margin.right;
+  const chartHeight = height - margin.top - margin.bottom;
+
+  const maxVal = Math.max(...data.flatMap(d => [d.views, d.unique]), 100) * 1.15;
+
+  const pointsViews = data.map((d, i) => {
+    const x = margin.left + (i / (data.length - 1)) * chartWidth;
+    const y = margin.top + chartHeight - (d.views / maxVal) * chartHeight;
+    return { x, y, data: d };
+  });
+
+  const pointsUnique = data.map((d, i) => {
+    const x = margin.left + (i / (data.length - 1)) * chartWidth;
+    const y = margin.top + chartHeight - (d.unique / maxVal) * chartHeight;
+    return { x, y, data: d };
+  });
+
+  const pathViews = pointsViews.reduce((acc, p, i) => i === 0 ? `M ${p.x} ${p.y}` : `${acc} L ${p.x} ${p.y}`, '');
+  const areaViews = `${pathViews} L ${pointsViews[pointsViews.length - 1].x} ${margin.top + chartHeight} L ${pointsViews[0].x} ${margin.top + chartHeight} Z`;
+
+  const pathUnique = pointsUnique.reduce((acc, p, i) => i === 0 ? `M ${p.x} ${p.y}` : `${acc} L ${p.x} ${p.y}`, '');
+  const areaUnique = `${pathUnique} L ${pointsUnique[pointsUnique.length - 1].x} ${margin.top + chartHeight} L ${pointsUnique[0].x} ${margin.top + chartHeight} Z`;
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const relativeX = (x / rect.width) * width - margin.left;
+    const pct = relativeX / chartWidth;
+    const idx = Math.max(0, Math.min(data.length - 1, Math.round(pct * (data.length - 1))));
+    setHoveredIdx(idx);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIdx(null);
+  };
+
+  const gridLines = [0, 0.25, 0.5, 0.75, 1];
+
+  return (
+    <div className="relative w-full h-full" style={{ minHeight: '220px' }}>
+      <svg 
+        viewBox={`0 0 ${width} ${height}`} 
+        className="w-full h-full select-none overflow-visible"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        <defs>
+          <linearGradient id="svgViewsGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
+          </linearGradient>
+          <linearGradient id="svgUniqueGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ec4899" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#ec4899" stopOpacity="0.0" />
+          </linearGradient>
+        </defs>
+
+        {/* Grid lines */}
+        {gridLines.map((ratio, i) => {
+          const y = margin.top + ratio * chartHeight;
+          const val = Math.round(maxVal * (1 - ratio));
+          return (
+            <g key={i} className="opacity-40">
+              <line 
+                x1={margin.left} 
+                y1={y} 
+                x2={margin.left + chartWidth} 
+                y2={y} 
+                stroke="rgba(255, 255, 255, 0.08)" 
+                strokeDasharray="4 4"
+              />
+              <text 
+                x={margin.left - 8} 
+                y={y + 4} 
+                fill="rgba(255, 255, 255, 0.4)" 
+                fontSize={10} 
+                textAnchor="end"
+                className="font-mono"
+              >
+                {val}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* X Axis Labels */}
+        {data.map((d, i) => {
+          const x = margin.left + (i / (data.length - 1)) * chartWidth;
+          return (
+            <text 
+              key={i}
+              x={x} 
+              y={height - margin.bottom + 16} 
+              fill="rgba(255, 255, 255, 0.4)" 
+              fontSize={10} 
+              textAnchor="middle"
+              className="font-mono"
+            >
+              {d.name}
+            </text>
+          );
+        })}
+
+        {/* Areas */}
+        <path d={areaViews} fill="url(#svgViewsGrad)" />
+        <path d={areaUnique} fill="url(#svgUniqueGrad)" />
+
+        {/* Lines */}
+        <path d={pathViews} fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" />
+        <path d={pathUnique} fill="none" stroke="#ec4899" strokeWidth="2.5" strokeLinecap="round" />
+
+        {/* Hover vertical indicator line */}
+        {hoveredIdx !== null && (
+          <line 
+            x1={pointsViews[hoveredIdx].x} 
+            y1={margin.top} 
+            x2={pointsViews[hoveredIdx].x} 
+            y2={margin.top + chartHeight} 
+            stroke="rgba(255, 255, 255, 0.2)" 
+            strokeDasharray="2 2"
+          />
+        )}
+
+        {/* Active Dots on hover */}
+        {hoveredIdx !== null && (
+          <g>
+            <circle 
+              cx={pointsViews[hoveredIdx].x} 
+              cy={pointsViews[hoveredIdx].y} 
+              r="5" 
+              fill="#8b5cf6" 
+              stroke="#fff" 
+              strokeWidth="1.5" 
+            />
+            <circle 
+              cx={pointsUnique[hoveredIdx].x} 
+              cy={pointsUnique[hoveredIdx].y} 
+              r="5" 
+              fill="#ec4899" 
+              stroke="#fff" 
+              strokeWidth="1.5" 
+            />
+          </g>
+        )}
+
+        {/* Custom Tooltip inside SVG */}
+        {hoveredIdx !== null && (
+          <g>
+            <rect 
+              x={Math.min(width - 130, Math.max(10, pointsViews[hoveredIdx].x - 60))} 
+              y={Math.max(10, Math.min(pointsViews[hoveredIdx].y, pointsUnique[hoveredIdx].y) - 65)} 
+              width="120" 
+              height="55" 
+              rx="8" 
+              fill="rgba(3, 3, 5, 0.95)" 
+              stroke="rgba(255, 255, 255, 0.15)" 
+              strokeWidth="1"
+            />
+            <text 
+              x={Math.min(width - 130, Math.max(10, pointsViews[hoveredIdx].x - 60)) + 10} 
+              y={Math.max(10, Math.min(pointsViews[hoveredIdx].y, pointsUnique[hoveredIdx].y) - 65) + 15} 
+              fill="#fff" 
+              fontSize="10" 
+              fontWeight="bold"
+              className="font-mono"
+            >
+              {data[hoveredIdx].name}
+            </text>
+            <circle 
+              cx={Math.min(width - 130, Math.max(10, pointsViews[hoveredIdx].x - 60)) + 15} 
+              cy={Math.max(10, Math.min(pointsViews[hoveredIdx].y, pointsUnique[hoveredIdx].y) - 65) + 28} 
+              r="3" 
+              fill="#8b5cf6" 
+            />
+            <text 
+              x={Math.min(width - 130, Math.max(10, pointsViews[hoveredIdx].x - 60)) + 24} 
+              y={Math.max(10, Math.min(pointsViews[hoveredIdx].y, pointsUnique[hoveredIdx].y) - 65) + 31} 
+              fill="rgba(255,255,255,0.7)" 
+              fontSize="9"
+              className="font-mono"
+            >
+              Views: <tspan fill="#fff" fontWeight="bold">{data[hoveredIdx].views}</tspan>
+            </text>
+            <circle 
+              cx={Math.min(width - 130, Math.max(10, pointsViews[hoveredIdx].x - 60)) + 15} 
+              cy={Math.max(10, Math.min(pointsViews[hoveredIdx].y, pointsUnique[hoveredIdx].y) - 65) + 40} 
+              r="3" 
+              fill="#ec4899" 
+            />
+            <text 
+              x={Math.min(width - 130, Math.max(10, pointsViews[hoveredIdx].x - 60)) + 24} 
+              y={Math.max(10, Math.min(pointsViews[hoveredIdx].y, pointsUnique[hoveredIdx].y) - 65) + 43} 
+              fill="rgba(255,255,255,0.7)" 
+              fontSize="9"
+              className="font-mono"
+            >
+              Unique: <tspan fill="#fff" fontWeight="bold">{data[hoveredIdx].unique}</tspan>
+            </text>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+interface ProjectInterestPoint {
+  name: string;
+  clicks: number;
+}
+
+function CustomBarChart({ data }: { data: ProjectInterestPoint[] }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  const maxVal = Math.max(...data.map(d => d.clicks), 50) * 1.15;
+
+  return (
+    <div className="space-y-4 flex flex-col justify-center h-full">
+      {data.map((item, idx) => {
+        const percent = Math.min(100, (item.clicks / maxVal) * 100);
+        return (
+          <div 
+            key={idx} 
+            className="flex flex-col gap-1.5 group cursor-pointer"
+            onMouseEnter={() => setHoveredIdx(idx)}
+            onMouseLeave={() => setHoveredIdx(null)}
+          >
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-slate-200 group-hover:text-white transition-colors">{item.name}</span>
+              <span className="font-bold font-mono text-theme-p-400">{item.clicks} clicks</span>
+            </div>
+            
+            <div className="w-full h-8 bg-black/40 rounded-xl overflow-hidden border border-white/5 relative flex items-center pr-3">
+              {/* Dynamic glowing bar width */}
+              <motion.div 
+                className="bg-gradient-to-r from-theme-p-500 to-theme-s-500 h-full rounded-l-xl relative"
+                initial={{ width: 0 }}
+                whileInView={{ width: `${percent}%` }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.0, delay: idx * 0.1, ease: "easeOut" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent w-full h-full" />
+              </motion.div>
+              
+              {hoveredIdx === idx && (
+                <div className="absolute inset-0 bg-white/5 pointer-events-none transition-opacity duration-200" />
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function VisitorInsights() {
   const [metrics, setMetrics] = useState([
@@ -183,30 +449,8 @@ export function VisitorInsights() {
               <h3 className="text-lg font-bold">Traffic Overview</h3>
               <p className="text-sm text-slate-400">Weekly engagement trends</p>
             </div>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trafficData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorUnique" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ec4899" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
-                  <RechartsTooltip 
-                    contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                    itemStyle={{ color: '#fff' }}
-                  />
-                  <Area type="monotone" dataKey="views" stroke="#8b5cf6" strokeWidth={2} fillOpacity={1} fill="url(#colorViews)" />
-                  <Area type="monotone" dataKey="unique" stroke="#ec4899" strokeWidth={2} fillOpacity={1} fill="url(#colorUnique)" />
-                </AreaChart>
-              </ResponsiveContainer>
+            <div className="h-[250px] w-full flex items-center justify-center">
+              <CustomAreaChart data={trafficData} />
             </div>
           </motion.div>
 
@@ -222,19 +466,8 @@ export function VisitorInsights() {
               <h3 className="text-lg font-bold">Project Interest</h3>
               <p className="text-sm text-slate-400">Clicks by case study</p>
             </div>
-            <div className="h-[300px] w-full flex-grow">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={projectInterestData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={true} vertical={false} />
-                  <XAxis type="number" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis dataKey="name" type="category" width={110} stroke="rgba(255,255,255,0.7)" fontSize={11} tickLine={false} axisLine={false} />
-                  <RechartsTooltip 
-                    cursor={{fill: 'rgba(255,255,255,0.05)'}}
-                    contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                  />
-                  <Bar dataKey="clicks" fill="#8b5cf6" radius={[0, 4, 4, 0]} barSize={24} />
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="w-full flex-grow flex flex-col justify-center">
+              <CustomBarChart data={projectInterestData} />
             </div>
           </motion.div>
         </div>

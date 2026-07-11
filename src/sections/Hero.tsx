@@ -56,12 +56,12 @@ export function Hero() {
       <div className="max-w-7xl mx-auto px-6 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
         
         {/* Text Content */}
-        <div className="flex-1 text-center lg:text-left z-10 pt-0 lg:pt-0">
+        <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left z-10 pt-0 lg:pt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center justify-center lg:justify-start gap-2 mb-3 lg:mb-6"
+            className="flex items-center justify-center lg:justify-start gap-2 mb-3 lg:mb-6 w-full lg:w-auto"
           >
             <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-theme-p-500/10 border border-theme-p-500/20 text-theme-p-400 text-xs font-bold tracking-widest uppercase">
               <Terminal size={14} /> System Online
@@ -113,7 +113,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 sm:mb-4 leading-tight tracking-tight text-white text-center lg:text-left"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 sm:mb-4 leading-tight tracking-tight text-white text-center lg:text-left w-full"
           >
             {profile.name}
           </motion.h1>
@@ -143,7 +143,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex lg:hidden items-center justify-center text-theme-p-400 font-mono text-sm sm:text-base md:text-lg mb-3 sm:mb-4 min-h-[2.2rem]"
+            className="flex lg:hidden items-center justify-center text-theme-p-400 font-mono text-sm sm:text-base md:text-lg mb-3 sm:mb-4 min-h-[2.2rem] w-full"
           >
             <span className="text-center leading-relaxed">
               <GlitchTypewriter 
@@ -161,7 +161,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-sm sm:text-base md:text-lg text-slate-400 mb-5 sm:mb-8 lg:mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0 text-center lg:text-left"
+            className="text-sm sm:text-base md:text-lg text-slate-400 mb-5 sm:mb-8 lg:mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0 text-center lg:text-left w-full"
           >
             {profile.tagline}
           </motion.p>

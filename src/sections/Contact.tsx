@@ -7,6 +7,7 @@ import { triggerVibration, hapticPatterns } from '../lib/haptics';
 export function Contact() {
   const { portfolioData } = useLanguage();
   const { profile } = portfolioData;
+  const ui = portfolioData.ui || {};
 
   return (
     <motion.section 
@@ -26,9 +27,9 @@ export function Contact() {
             whileInView={{ opacity: 1, y: 0, letterSpacing: '-0.02em' }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
-            className="text-5xl md:text-7xl font-black tracking-tight text-white leading-tight"
+            className="text-4xl md:text-6xl font-black tracking-tight text-white leading-tight"
           >
-            Let's build something <span className="text-gradient">extraordinary.</span>
+            {ui.contactTitle || "Let's build something extraordinary."}
           </motion.h2>
           
           <motion.p 
@@ -36,10 +37,9 @@ export function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] as any }}
-            className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed"
           >
-            Currently accepting new projects and full-time opportunities. 
-            Whether you have a question or just want to say hi, I'll try my best to get back to you!
+            {ui.contactSubtitle || "Currently accepting new projects and full-time opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!"}
           </motion.p>
           
           <motion.div
@@ -56,7 +56,7 @@ export function Contact() {
               className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-theme-p-500 to-theme-s-500 text-white font-bold transition-all text-lg shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] cursor-pointer"
             >
               <Mail size={20} />
-              Say Hello <ArrowRight size={20} />
+              {ui.sayHello || "Say Hello"} <ArrowRight size={20} />
             </motion.a>
           </motion.div>
         </div>

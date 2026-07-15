@@ -9,7 +9,7 @@ interface SectionHeadingProps {
   tooltipSummary?: string;
 }
 
-const DEFAULT_SUMMARIES: Record<string, string> = {
+export const DEFAULT_SUMMARIES: Record<string, string> = {
   "core capabilities": "Explore Faisal's foundational software principles: Clean architecture, high-stakes medical/CV algorithms, and systems engineering.",
   "technical arsenal": "A structured map of Faisal's professional engineering stack: Front-End, Back-End, AI/Deep Learning, and DevOps tools.",
   "journey & milestones": "A timeline showcasing Faisal's academic honors, system roles, and dedication to continuous technology mastery.",
@@ -49,19 +49,21 @@ export function SectionHeading({ title, subtitle, readTime, tooltipSummary }: Se
                 initial={{ opacity: 0, y: 15, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-4 py-3 bg-[#0B0B0F]/95 border border-theme-p-500/30 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-xl z-50 w-72 text-center flex flex-col gap-1.5"
-                style={{ filter: "drop-shadow(0 10px 25px rgba(236,72,153,0.15))" }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-5 py-4 bg-[#0A0A0C]/98 border border-white/10 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-2xl z-50 w-72 text-center flex flex-col gap-2 pointer-events-none"
+                style={{ filter: "drop-shadow(0 15px 35px rgba(0,0,0,0.5))" }}
               >
-                <div className="flex items-center justify-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-theme-p-400">
-                  <Info size={11} className="animate-pulse" />
-                  <span>Section Details</span>
+                <div className="flex items-center justify-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-theme-p-400">
+                  <Info size={12} className="animate-pulse" />
+                  <span>Section Context</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed font-sans font-medium">
+                <p className="text-[11px] text-slate-300 leading-relaxed font-sans font-medium">
                   {summaryText}
                 </p>
                 {/* Micro pointer arrow */}
-                <div className="absolute top-full left-1/2 -translate-x-1/2 border-x-6 border-x-transparent border-t-6 border-t-[#0B0B0F]/95" />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-x-[6px] border-x-transparent border-t-[6px] border-t-white/10">
+                  <div className="absolute -top-[7px] -left-[5px] border-x-[5px] border-x-transparent border-t-[5px] border-t-[#0A0A0C]/98" />
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

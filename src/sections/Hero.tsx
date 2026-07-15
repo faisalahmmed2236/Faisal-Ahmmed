@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { ArrowRight, Download, Terminal, Code2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -23,7 +23,7 @@ export function Hero() {
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!imageRef.current) return;
     const rect = imageRef.current.getBoundingClientRect();
     const width = rect.width;
@@ -34,12 +34,12 @@ export function Hero() {
     const yPct = mouseY / height - 0.5;
     x.set(xPct);
     y.set(yPct);
-  };
+  }, [x, y]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     x.set(0);
     y.set(0);
-  };
+  }, [x, y]);
 
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">

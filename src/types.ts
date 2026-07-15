@@ -89,4 +89,5 @@ export interface PortfolioData {
   skills?: SkillData[];
   experiences?: ExperienceData[];
   education?: EducationData[];
+  ui?: Record<string, string>;
 }

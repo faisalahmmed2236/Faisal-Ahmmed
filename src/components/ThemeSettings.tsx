@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Settings, X, Check, Moon, Sun, Monitor, Globe, Download, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -11,8 +11,8 @@ const themes = [
   { id: 'default', name: 'Nebula (Default)', color1: 'bg-indigo-500', color2: 'bg-purple-500', glow: 'shadow-[0_0_15px_rgba(99,102,241,0.3)]' },
   { id: 'emerald', name: 'Aurora', color1: 'bg-emerald-500', color2: 'bg-teal-500', glow: 'shadow-[0_0_15px_rgba(16,185,129,0.3)]' },
   { id: 'rose', name: 'Supernova', color1: 'bg-rose-500', color2: 'bg-orange-500', glow: 'shadow-[0_0_15px_rgba(244,63,94,0.3)]' },
-  { id: 'blue', name: 'Deep Space', color1: 'bg-blue-500', color2: 'bg-cyan-500', glow: 'shadow-[0_0_15px_rgba(59,130,246,0.3)]' },
- ] as const;
+  { id: 'blue', name: 'Deep Space', color1: 'bg-blue-500', color2: 'bg-cyan-500', glow: 'shadow-[0_0_15px_rgba(59,130,246,0.3)]' }, 
+] as const;
 
 export function ThemeSettings() {
   const { theme, setTheme, displayMode, setDisplayMode } = useTheme();
@@ -30,32 +30,33 @@ export function ThemeSettings() {
     return () => window.removeEventListener('open-theme-settings', handleOpen);
   }, [playOpen]);
 
-  const selectMode = (mode: 'dark' | 'light' | 'system') => {
+  const selectMode = useCallback((mode: 'dark' | 'light' | 'system') => {
     playToggle();
     setDisplayMode(mode);
-  };
+  }, [playToggle, setDisplayMode]);
 
-  const selectLanguage = (lang: 'en' | 'es' | 'bn' | 'ar') => {
+  const selectLanguage = useCallback((lang: 'en' | 'es' | 'bn' | 'ar') => {
     playToggle();
     setLanguage(lang);
-  };
+  }, [playToggle, setLanguage]);
 
-  const handleOpenPanel = () => {
+  const handleOpenPanel = useCallback(() => {
     triggerVibration(hapticPatterns.medium);
     setIsOpen(true);
     playOpen();
-  };
+  }, [playOpen]);
 
-  const handleClosePanel = () => {
+  const handleClosePanel = useCallback(() => {
     triggerVibration(hapticPatterns.light);
     setIsOpen(false);
     playClose();
-  };
+  }, [playClose]);
 
-  const selectTheme = (themeId: typeof themes[number]['id']) => {
+  const selectTheme = useCallback((themeId: typeof themes[number]['id']) => {
     setTheme(themeId);
     playClick();
-  };
+  }, [playClick, setTheme]);
+
 
   return (
     <>

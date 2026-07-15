@@ -13,21 +13,22 @@ import { ExitIntentModal } from './components/ExitIntentModal';
 import { SectionDivider } from './components/SectionDivider';
 import { useMetaTags } from './hooks/useMetaTags';
 import { ScrollProgress } from './components/ScrollProgress';
+import { CustomCursor } from './components/CustomCursor';
 
 import { ParticleBackground } from './components/ParticleBackground';
 import { AnalyticsProvider } from './context/AnalyticsContext';
 
-import { About } from './sections/About';
-import { Services } from './sections/Services';
-import { Skills } from './sections/Skills';
-import { Experience } from './sections/Experience';
-import { Projects } from './sections/Projects';
-import { Achievements } from './sections/Achievements';
-import { VisitorInsights } from './sections/VisitorInsights';
-import { PerformanceDashboard } from './sections/PerformanceDashboard';
-import { Testimonials } from './sections/Testimonials';
-import { Contact } from './sections/Contact';
-import { Footer } from './components/Footer';
+const About = React.lazy(() => import('./sections/About').then(m => ({ default: m.About })));
+const Services = React.lazy(() => import('./sections/Services').then(m => ({ default: m.Services })));
+const Skills = React.lazy(() => import('./sections/Skills').then(m => ({ default: m.Skills })));
+const Experience = React.lazy(() => import('./sections/Experience').then(m => ({ default: m.Experience })));
+const Projects = React.lazy(() => import('./sections/Projects').then(m => ({ default: m.Projects })));
+const Achievements = React.lazy(() => import('./sections/Achievements').then(m => ({ default: m.Achievements })));
+const VisitorInsights = React.lazy(() => import('./sections/VisitorInsights').then(m => ({ default: m.VisitorInsights })));
+const PerformanceDashboard = React.lazy(() => import('./sections/PerformanceDashboard').then(m => ({ default: m.PerformanceDashboard })));
+const Testimonials = React.lazy(() => import('./sections/Testimonials').then(m => ({ default: m.Testimonials })));
+const Contact = React.lazy(() => import('./sections/Contact').then(m => ({ default: m.Contact })));
+const Footer = React.lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
 
 // Loading fallback for lazy components
 const SectionLoader = () => (
@@ -43,6 +44,7 @@ export default function App() {
     <AnalyticsProvider>
       <div className="min-h-screen bg-background text-foreground selection:bg-theme-p-500/30">
         <ParticleBackground />
+        <CustomCursor />
         <ScrollProgress />
         <Navbar />
         

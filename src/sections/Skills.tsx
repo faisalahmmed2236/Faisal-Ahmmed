@@ -29,6 +29,8 @@ export function Skills() {
   const skills = portfolioData.skills;
   const trackerRef = useTrackSection('skills');
 
+  const ui = portfolioData.ui || {};
+
   if (!skills || skills.length === 0) return null;
 
   return (
@@ -36,24 +38,28 @@ export function Skills() {
       ref={trackerRef as any}
       id="skills" 
       className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
+      initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] as any }}
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-theme-p-600/5 blur-[120px] pointer-events-none rounded-full" />
       
-      <SectionHeading title="Technical Arsenal" subtitle="Skills" readTime="1 min" />
+      <SectionHeading 
+        title={ui.skillsTitle || "Core Expertise"} 
+        subtitle={ui.skillsSubtitle || "Deep Technical Competence Matrix"} 
+        readTime={`1 ${ui.readTime || 'min read'}`} 
+      />
       
       <motion.div
         className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 relative z-10"
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-20px" }}
+        viewport={{ once: true, margin: "-100px" }}
         variants={{
           hidden: {},
           show: {
-            transition: { staggerChildren: 0.2 }
+            transition: { staggerChildren: 0.25 }
           }
         }}
       >
@@ -61,8 +67,8 @@ export function Skills() {
           <motion.div 
             key={groupIdx}
             variants={{
-              hidden: { opacity: 0, y: 15, scale: 0.98 },
-              show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } }
+              hidden: { opacity: 0, y: 30, scale: 0.95, filter: "blur(5px)" },
+              show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as any } }
             }}
             className="flex flex-col gap-6 bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl relative overflow-hidden group hover:border-theme-p-500/50 transition-colors"
           >

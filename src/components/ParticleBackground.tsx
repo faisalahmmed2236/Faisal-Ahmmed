@@ -162,13 +162,16 @@ export const ParticleBackground: React.FC = () => {
     };
 
     // Ultra-fast direct theme config retrieval
+    let cachedColors: any = null;
+    
     const getColors = () => {
+      if (cachedColors) return cachedColors;
+      
       const isLight = document.documentElement.getAttribute('data-mode') === 'light';
       const themeAttr = document.documentElement.getAttribute('data-theme') || 'default';
 
       if (isLight) {
-        // Light mode needs beautiful soft blue background elements
-        return {
+        cachedColors = {
           primaryBlob: 'rgba(59, 130, 246, 0.12)',
           primaryBlob04: 'rgba(59, 130, 246, 0.04)',
           secondaryBlob: 'rgba(96, 165, 250, 0.10)',
@@ -178,12 +181,13 @@ export const ParticleBackground: React.FC = () => {
           particle: 'rgba(59, 130, 246, 0.25)',
           linePrefix: 'rgba(59, 130, 246, '
         };
+        return cachedColors;
       }
 
       // Dark mode theme selections
       switch (themeAttr) {
         case 'emerald':
-          return {
+          cachedColors = {
             primaryBlob: 'rgba(16, 185, 129, 0.12)',
             primaryBlob04: 'rgba(16, 185, 129, 0.04)',
             secondaryBlob: 'rgba(20, 184, 166, 0.10)',
@@ -193,8 +197,9 @@ export const ParticleBackground: React.FC = () => {
             particle: 'rgba(16, 185, 129, 0.25)',
             linePrefix: 'rgba(16, 185, 129, '
           };
+          break;
         case 'rose':
-          return {
+          cachedColors = {
             primaryBlob: 'rgba(244, 63, 94, 0.12)',
             primaryBlob04: 'rgba(244, 63, 94, 0.04)',
             secondaryBlob: 'rgba(249, 115, 22, 0.10)',
@@ -204,8 +209,9 @@ export const ParticleBackground: React.FC = () => {
             particle: 'rgba(244, 63, 94, 0.25)',
             linePrefix: 'rgba(244, 63, 94, '
           };
+          break;
         case 'blue':
-          return {
+          cachedColors = {
             primaryBlob: 'rgba(59, 130, 246, 0.12)',
             primaryBlob04: 'rgba(59, 130, 246, 0.04)',
             secondaryBlob: 'rgba(6, 182, 212, 0.10)',
@@ -215,8 +221,9 @@ export const ParticleBackground: React.FC = () => {
             particle: 'rgba(59, 130, 246, 0.25)',
             linePrefix: 'rgba(59, 130, 246, '
           };
+          break;
         default: // Indigo/Purple default
-          return {
+          cachedColors = {
             primaryBlob: 'rgba(99, 102, 241, 0.12)',
             primaryBlob04: 'rgba(99, 102, 241, 0.04)',
             secondaryBlob: 'rgba(168, 85, 247, 0.10)',
@@ -226,7 +233,9 @@ export const ParticleBackground: React.FC = () => {
             particle: 'rgba(99, 102, 241, 0.25)',
             linePrefix: 'rgba(99, 102, 241, '
           };
+          break;
       }
+      return cachedColors;
     };
 
     const drawLines = (lineColorPrefix: string) => {
@@ -315,6 +324,7 @@ export const ParticleBackground: React.FC = () => {
     // Listen to changes in data-theme or data-mode dynamically
     const observer = new MutationObserver(() => {
       // Force instant update on mode or theme switches
+      cachedColors = null;
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-mode'] });
 

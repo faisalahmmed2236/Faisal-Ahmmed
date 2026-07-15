@@ -35,7 +35,7 @@ export function Interactive3DObject() {
   useEffect(() => {
     // Generate sphere points using Fibonacci Golden Spiral for perfect distribution
     const pointCount = 150;
-    const sphereRadius = 135;
+    const sphereRadius = 90;
     const spherePoints: Point3D[] = [];
 
     for (let i = 0; i < pointCount; i++) {
@@ -51,8 +51,8 @@ export function Interactive3DObject() {
     const ring1Points: Point3D[] = [];
     const ring2Points: Point3D[] = [];
     const ringCount = 100;
-    const ring1Radius = 185;
-    const ring2Radius = 225;
+    const ring1Radius = 130;
+    const ring2Radius = 165;
 
     for (let i = 0; i < ringCount; i++) {
       const angle = (i / ringCount) * Math.PI * 2;
@@ -78,20 +78,25 @@ export function Interactive3DObject() {
         const dy = spherePoints[i].y - spherePoints[j].y;
         const dz = spherePoints[i].z - spherePoints[j].z;
         const dist3d = Math.sqrt(dx*dx + dy*dy + dz*dz);
-        if (dist3d < 85) {
+        if (dist3d < 55) {
           connections.push([i, j]);
         }
       }
     }
 
+    let hasMouseMoved = false;
+
     // Track mouse movement
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      mouseRef.current.targetX = (e.clientX - cx) * 0.4;
-      mouseRef.current.targetY = (e.clientY - cy) * 0.4;
+      mouseRef.current.targetX = e.clientX - rect.left;
+      mouseRef.current.targetY = e.clientY - rect.top;
+      if (!hasMouseMoved) {
+        mouseRef.current.x = mouseRef.current.targetX;
+        mouseRef.current.y = mouseRef.current.targetY;
+        hasMouseMoved = true;
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -161,6 +166,11 @@ export function Interactive3DObject() {
       };
     };
 
+      // Pre-allocate projection arrays to prevent GC churn
+      const projectedPoints = Array.from({ length: pointCount }, () => ({ x: 0, y: 0, z: 0, depthScale: 0 }));
+      const projectedRing1 = Array.from({ length: ringCount }, () => ({ x: 0, y: 0, z: 0 }));
+      const projectedRing2 = Array.from({ length: ringCount }, () => ({ x: 0, y: 0, z: 0 }));
+
     const render = () => {
       const dpr = Math.max(2, window.devicePixelRatio || 1);
       const width = canvas.width / dpr;
@@ -173,22 +183,28 @@ export function Interactive3DObject() {
 
       ctx.clearRect(0, 0, width, height);
 
+      if (!hasMouseMoved) {
+        mouseRef.current.targetX = width / 2;
+        mouseRef.current.targetY = height / 2;
+        if (mouseRef.current.x === 0 && mouseRef.current.y === 0) {
+          mouseRef.current.x = width / 2;
+          mouseRef.current.y = height / 2;
+        }
+      }
+
       // Lerp mouse coordinates to achieve smooth movement with lag inertia
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
+      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.08;
+      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.08;
 
-      // Elegant, automatic slow float/bobbing motion
       const timeSec = Date.now() * 0.001;
-      const autoFloatX = Math.cos(timeSec * 0.8) * 12;
-      const autoFloatY = Math.sin(timeSec * 0.6) * 15;
 
-      // Translate the entire 3D ball center smoothly with mouse displacement and float offsets
-      const centerX = width / 2 + autoFloatX + mouseRef.current.x * 0.8;
-      const centerY = height / 2 + autoFloatY + mouseRef.current.y * 0.8;
+      // Center perfectly on the mouse pointer with a slight smooth lag
+      const centerX = mouseRef.current.x;
+      const centerY = mouseRef.current.y;
 
-      // Base auto rotation + breathing speed modulation + mouse influence
-      angleY += 0.004 + Math.sin(timeSec * 0.4) * 0.0015 + mouseRef.current.x * 0.00005;
-      angleX += 0.0025 + Math.cos(timeSec * 0.3) * 0.001 - mouseRef.current.y * 0.00005;
+      // Base auto rotation + breathing speed modulation + mouse influence (reduced since we center on it)
+      angleY += 0.004 + Math.sin(timeSec * 0.4) * 0.0015;
+      angleX += 0.0025 + Math.cos(timeSec * 0.3) * 0.001;
 
       // Draw Central Glowing Core
       const coreGradient = ctx.createRadialGradient(
@@ -204,20 +220,19 @@ export function Interactive3DObject() {
       ctx.fill();
 
       // Project sphere points
-      const projectedPoints = spherePoints.map(p => {
+      for (let i = 0; i < pointCount; i++) {
+        const p = spherePoints[i];
         // Apply rotations
         let rotated = rotatePointY(p, angleY);
         rotated = rotatePointX(rotated, angleX);
 
         // Perspective scale factor
         const scale = fov / (fov + rotated.z);
-        return {
-          x: centerX + rotated.x * scale,
-          y: centerY + rotated.y * scale,
-          z: rotated.z,
-          depthScale: scale
-        };
-      });
+        projectedPoints[i].x = centerX + rotated.x * scale;
+        projectedPoints[i].y = centerY + rotated.y * scale;
+        projectedPoints[i].z = rotated.z;
+        projectedPoints[i].depthScale = scale;
+      }
 
       // Draw constellation connections using precomputed connections list (Ultra-fast!)
       ctx.lineWidth = 0.5;
@@ -256,7 +271,8 @@ export function Interactive3DObject() {
       });
 
       // Project and draw Cyber Ring 1 (tilted in space)
-      const projectedRing1 = ring1Points.map(p => {
+      for (let i = 0; i < ringCount; i++) {
+        const p = ring1Points[i];
         // Tilting ring initially
         let rotated = rotatePointX(p, Math.PI / 4);
         rotated = rotatePointZ(rotated, Math.PI / 6);
@@ -265,12 +281,10 @@ export function Interactive3DObject() {
         rotated = rotatePointX(rotated, angleX);
 
         const scale = fov / (fov + rotated.z);
-        return {
-          x: centerX + rotated.x * scale,
-          y: centerY + rotated.y * scale,
-          z: rotated.z
-        };
-      });
+        projectedRing1[i].x = centerX + rotated.x * scale;
+        projectedRing1[i].y = centerY + rotated.y * scale;
+        projectedRing1[i].z = rotated.z;
+      }
 
       // Draw Ring 1 paths
       ctx.lineWidth = 1.0;
@@ -289,19 +303,18 @@ export function Interactive3DObject() {
       }
 
       // Project and draw Cyber Ring 2 (different tilt, counter rotation)
-      const projectedRing2 = ring2Points.map(p => {
+      for (let i = 0; i < ringCount; i++) {
+        const p = ring2Points[i];
         let rotated = rotatePointX(p, -Math.PI / 3);
         rotated = rotatePointZ(rotated, -Math.PI / 5);
         rotated = rotatePointY(rotated, -angleY * 1.2);
         rotated = rotatePointX(rotated, angleX * 0.8);
 
         const scale = fov / (fov + rotated.z);
-        return {
-          x: centerX + rotated.x * scale,
-          y: centerY + rotated.y * scale,
-          z: rotated.z
-        };
-      });
+        projectedRing2[i].x = centerX + rotated.x * scale;
+        projectedRing2[i].y = centerY + rotated.y * scale;
+        projectedRing2[i].z = rotated.z;
+      }
 
       // Draw Ring 2 paths
       ctx.shadowBlur = 2;

@@ -8,6 +8,8 @@ export function Testimonials() {
   const { portfolioData } = useLanguage();
   const { testimonials } = portfolioData;
 
+  const ui = portfolioData.ui || {};
+
   return (
     <motion.section 
       id="testimonials" 
@@ -20,7 +22,11 @@ export function Testimonials() {
       <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-theme-p-500/20 to-transparent -z-10" />
       
       <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading title="Validation" subtitle="What people are saying about my work." readTime="2 min" />
+        <SectionHeading 
+          title={ui.testimonialsTitle || "Client Endorsements"} 
+          subtitle={ui.testimonialsSubtitle || "What people are saying about my work."} 
+          readTime={`2 ${ui.readTime || 'min read'}`} 
+        />
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (

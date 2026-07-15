@@ -24,25 +24,31 @@ export function About() {
   const { profile } = portfolioData;
   const trackerRef = useTrackSection('about');
 
+  const ui = portfolioData.ui || {};
+
   return (
     <motion.section 
       ref={trackerRef as any}
       id="about" 
       className="py-6 md:py-10 relative"
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
+      initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] as any }}
     >
       <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading title="Core Capabilities" subtitle="A brief introduction to who I am and what I do." readTime="2 min" />
+        <SectionHeading 
+          title={ui.aboutTitle || "Core Capabilities"} 
+          subtitle={ui.aboutSubtitle || "A brief introduction to who I am and what I do."} 
+          readTime={`2 ${ui.readTime || 'min read'}`} 
+        />
         
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as any, delay: 0.1 }}
           >
             <div className="bg-white/5 border border-white/5 p-8 md:p-12 rounded-3xl relative overflow-hidden text-center md:text-left">
                <div className="absolute top-0 right-0 w-64 h-64 bg-theme-p-600/10 rounded-full blur-[80px]" />
@@ -93,23 +99,23 @@ export function About() {
           
           {/* Decorative Elements */}
           <motion.div
-             initial={{ opacity: 0, y: 15 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] as any }}
+             initial={{ opacity: 0, x: 30, filter: "blur(5px)" }}
+             whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+             viewport={{ once: true, margin: "-100px" }}
+             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] as any }}
              className="grid grid-cols-2 gap-4"
           >
             <div className="bg-white/5 border border-white/5 p-6 rounded-3xl flex flex-col justify-center text-center">
               <span className="text-4xl font-bold text-white mb-2">3</span>
-              <span className="text-slate-400 text-sm">Years Experience</span>
+              <span className="text-slate-400 text-sm">{ui.yearsExperience || "Years Experience"}</span>
             </div>
             <div className="bg-white/5 border border-white/5 p-6 rounded-3xl flex flex-col justify-center text-center">
               <span className="text-4xl font-bold text-white mb-2">19</span>
-              <span className="text-slate-400 text-sm">Projects Delivered</span>
+              <span className="text-slate-400 text-sm">{ui.projectsDelivered || "Projects Delivered"}</span>
             </div>
             <div className="bg-white/5 border border-white/5 p-6 rounded-3xl flex flex-col justify-center text-center col-span-2">
               <span className="text-4xl font-bold text-gradient mb-2">Top 1%</span>
-              <span className="text-slate-400 text-sm">Rated Talent</span>
+              <span className="text-slate-400 text-sm">{ui.ratedTalent || "Rated Talent"}</span>
             </div>
           </motion.div>
         </div>

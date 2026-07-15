@@ -9,8 +9,9 @@ import { triggerVibration, hapticPatterns } from '../lib/haptics';
 import { useTrackSection } from '../hooks/useTrackSection';
 
 export function Projects() {
-  const { portfolioData } = useLanguage();
+  const { portfolioData, language } = useLanguage();
   const { projects } = portfolioData;
+  const ui = portfolioData.ui || {};
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
   const trackerRef = useTrackSection('projects');
@@ -43,14 +44,18 @@ export function Projects() {
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as any }}
     >
       <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading title="Featured Deployments" subtitle="A showcase of recent projects highlighting my expertise." readTime="4 min" />
+        <SectionHeading 
+          title={ui.projectsTitle || "Featured Deployments"} 
+          subtitle={ui.projectsSubtitle || "A showcase of recent projects highlighting my expertise."} 
+          readTime={`4 ${ui.readTime || 'min read'}`} 
+        />
         
         <div className="mb-16 flex flex-col md:flex-row gap-6 items-center justify-between bg-[#0A0A0C] border border-white/5 p-6 rounded-3xl shadow-xl relative z-10 text-center md:text-left">
           <div className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input 
               type="text" 
-              placeholder="Search projects..." 
+              placeholder={language === 'bn' ? 'প্রকল্প খুঁজুন...' : language === 'es' ? 'Buscar proyectos...' : language === 'ar' ? 'البحث عن المشاريع...' : 'Search projects...'} 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-theme-p-500/50 transition-colors"
@@ -67,7 +72,7 @@ export function Projects() {
                   : 'bg-white/5 text-slate-400 border border-white/5 hover:bg-white/10'
               }`}
             >
-              All
+              {language === 'bn' ? 'সব' : language === 'es' ? 'Todo' : language === 'ar' ? 'الكل' : 'All'}
             </motion.button>
             {allTechs.map(tech => (
               <motion.button
@@ -130,6 +135,7 @@ export function Projects() {
                     <img 
                       src={project.image} 
                       alt={project.title} 
+                      loading="lazy"
                       className="w-full h-[250px] sm:h-[300px] md:h-[400px] object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </motion.div>

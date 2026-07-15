@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, X, Send, Bot, User, Sparkles, RefreshCw } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, Sparkles, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { triggerVibration, hapticPatterns } from '../lib/haptics';
 
@@ -94,6 +94,8 @@ function parseInlineStyles(text: string) {
   return parts.length > 0 ? parts : text;
 }
 
+import { knowledgeBase } from '../data/knowledgeBase';
+
 export function AIAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
@@ -112,13 +114,36 @@ export function AIAssistantWidget() {
   }, [messages]);
 
   const [inputValue, setInputValue] = useState('');
+  const [isTTSEnabled, setIsTTSEnabled] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { portfolioData } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
 
-  const scrollToBottom = () => {
+  const speak = useCallback((text: string) => {
+    if (!isTTSEnabled || !('speechSynthesis' in window)) return;
+    
+    // Stop any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    // Create new utterance, strip markdown bold/italic tags for cleaner reading
+    const cleanText = text.replace(/[*_~`]/g, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // Try to find a good female voice or default English
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) 
+      || voices.find(v => v.lang.startsWith('en'));
+      
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+    
+    window.speechSynthesis.speak(utterance);
+  }, [isTTSEnabled]);
+
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -126,7 +151,7 @@ export function AIAssistantWidget() {
     }
   }, [messages, isOpen, isLoading]);
 
-  const sendMessageToAPI = async (userMsg: Message, currentHistory: Message[]) => {
+  const sendMessageToAPI = useCallback(async (userMsg: Message, currentHistory: Message[]) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/chat', {
@@ -134,7 +159,8 @@ export function AIAssistantWidget() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [...currentHistory, userMsg],
-          portfolioData
+          portfolioData,
+          knowledgeBase
         })
       });
 
@@ -147,6 +173,7 @@ export function AIAssistantWidget() {
         content: data.response || "I apologize, but I encountered an issue processing that. Please ask again."
       };
       setMessages(prev => [...prev, assistantMessage]);
+      speak(assistantMessage.content);
     } catch (error) {
       console.error(error);
       const errorMessage: Message = {
@@ -155,12 +182,13 @@ export function AIAssistantWidget() {
         content: "Oops! I encountered an error connecting to my brain. Please check your internet connection and try again."
       };
       setMessages(prev => [...prev, errorMessage]);
+      speak(errorMessage.content);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [portfolioData, speak]);
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!inputValue.trim() || isLoading) return;
 
     const userMessage: Message = {
@@ -174,9 +202,9 @@ export function AIAssistantWidget() {
     triggerVibration(hapticPatterns.light);
     
     await sendMessageToAPI(userMessage, messages);
-  };
+  }, [inputValue, isLoading, messages, sendMessageToAPI]);
 
-  const handleSuggestionClick = async (prompt: string) => {
+  const handleSuggestionClick = useCallback(async (prompt: string) => {
     if (isLoading) return;
     triggerVibration(hapticPatterns.medium);
 
@@ -189,7 +217,7 @@ export function AIAssistantWidget() {
     setMessages(prev => [...prev, userMessage]);
     
     await sendMessageToAPI(userMessage, messages);
-  };
+  }, [isLoading, messages, sendMessageToAPI]);
 
   return (
     <>
@@ -235,11 +263,24 @@ export function AIAssistantWidget() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Sparkles size={10} className="text-theme-p-400 animate-pulse" />
-                    <span className="text-[10px] text-slate-400 font-medium tracking-wide">Pro Advanced Level Brain</span>
+                    <span className="text-[10px] text-slate-400 font-medium tracking-wide">Advanced Level Brain</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
+                <button 
+                  onClick={() => {
+                    triggerVibration(hapticPatterns.light);
+                    if (isTTSEnabled) {
+                      window.speechSynthesis.cancel();
+                    }
+                    setIsTTSEnabled(!isTTSEnabled);
+                  }}
+                  className={`p-1.5 rounded-lg transition-colors ${isTTSEnabled ? 'text-theme-p-400 bg-theme-p-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                  title={isTTSEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
+                >
+                  {isTTSEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                </button>
                 <button 
                   onClick={() => {
                     triggerVibration(hapticPatterns.light);

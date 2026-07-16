@@ -19,11 +19,11 @@ export const AnimatedGeometricShape = () => (
       drag
       dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
     >
-      <div className="absolute inset-0 border-[1px] border-theme-p-500/50 rounded-full [transform:rotateX(0deg)] bg-theme-p-500/5 backdrop-blur-[2px] shadow-[0_0_15px_rgba(var(--theme-p-500),0.2)]" />
-      <div className="absolute inset-0 border-[1px] border-theme-s-500/50 rounded-full [transform:rotateX(60deg)] bg-theme-s-500/5 backdrop-blur-[2px] shadow-[0_0_15px_rgba(var(--theme-s-500),0.2)]" />
-      <div className="absolute inset-0 border-[1px] border-theme-p-500/50 rounded-full [transform:rotateX(120deg)] bg-theme-p-500/5 backdrop-blur-[2px] shadow-[0_0_15px_rgba(var(--theme-p-500),0.2)]" />
-      <div className="absolute inset-0 border-[1px] border-theme-s-500/50 rounded-full [transform:rotateY(60deg)] bg-theme-s-500/5 backdrop-blur-[2px] shadow-[0_0_15px_rgba(var(--theme-s-500),0.2)]" />
-      <div className="absolute inset-0 border-[1px] border-theme-p-500/50 rounded-full [transform:rotateY(120deg)] bg-theme-p-500/5 backdrop-blur-[2px] shadow-[0_0_15px_rgba(var(--theme-p-500),0.2)]" />
+      <div className="absolute inset-0 border-[1px] border-theme-p-500/50 rounded-full [transform:rotateX(0deg)] bg-theme-p-500/5 shadow-[0_0_15px_rgba(var(--theme-p-500),0.2)]" />
+      <div className="absolute inset-0 border-[1px] border-theme-s-500/50 rounded-full [transform:rotateX(60deg)] bg-theme-s-500/5 shadow-[0_0_15px_rgba(var(--theme-s-500),0.2)]" />
+      <div className="absolute inset-0 border-[1px] border-theme-p-500/50 rounded-full [transform:rotateX(120deg)] bg-theme-p-500/5 shadow-[0_0_15px_rgba(var(--theme-p-500),0.2)]" />
+      <div className="absolute inset-0 border-[1px] border-theme-s-500/50 rounded-full [transform:rotateY(60deg)] bg-theme-s-500/5 shadow-[0_0_15px_rgba(var(--theme-s-500),0.2)]" />
+      <div className="absolute inset-0 border-[1px] border-theme-p-500/50 rounded-full [transform:rotateY(120deg)] bg-theme-p-500/5 shadow-[0_0_15px_rgba(var(--theme-p-500),0.2)]" />
       
       {/* Inner Core */}
       <motion.div 

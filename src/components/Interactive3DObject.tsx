@@ -118,8 +118,8 @@ export function Interactive3DObject() {
         const height = entry.contentRect.height || (containerRef.current ? containerRef.current.clientHeight : 0);
         
         if (width > 0 && height > 0) {
-          // Force high resolution pixel density (at least 2.0 DPR) for extreme rendering crispness
-          const dpr = Math.max(2, window.devicePixelRatio || 1);
+          // Cap pixel ratio for performance
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
           canvas.width = width * dpr;
           canvas.height = height * dpr;
           canvas.style.width = `${width}px`;
@@ -172,7 +172,7 @@ export function Interactive3DObject() {
       const projectedRing2 = Array.from({ length: ringCount }, () => ({ x: 0, y: 0, z: 0 }));
 
     const render = () => {
-      const dpr = Math.max(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const width = canvas.width / dpr;
       const height = canvas.height / dpr;
 

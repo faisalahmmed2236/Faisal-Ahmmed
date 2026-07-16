@@ -14,6 +14,10 @@ export const ParticleBackground: React.FC = () => {
     let particles: Particle[] = [];
     let blobs: GlowBlob[] = [];
     
+    // Cache dimensions to avoid layout thrashing
+    let cachedWidth = window.innerWidth;
+    let cachedHeight = window.innerHeight;
+    
     // Track mouse position
     const mouse = {
       x: -1000,
@@ -22,12 +26,15 @@ export const ParticleBackground: React.FC = () => {
     };
 
     const handleResize = () => {
-      // Force extreme sharpness by rendering at a minimum of 2.0x pixel ratio
-      const dpr = Math.max(2, window.devicePixelRatio || 1);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
+      cachedWidth = window.innerWidth;
+      cachedHeight = window.innerHeight;
+      
+      // Cap pixel ratio to 1.5 for performance while keeping it sharp enough
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = cachedWidth * dpr;
+      canvas.height = cachedHeight * dpr;
+      canvas.style.width = `${cachedWidth}px`;
+      canvas.style.height = `${cachedHeight}px`;
       ctx.scale(dpr, dpr);
       init();
     };
@@ -142,8 +149,8 @@ export const ParticleBackground: React.FC = () => {
     }
 
     const init = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const width = cachedWidth;
+      const height = cachedHeight;
 
       // Particles setup (optimized for speed and density)
       particles = [];
@@ -285,8 +292,8 @@ export const ParticleBackground: React.FC = () => {
     };
 
     const animate = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const width = cachedWidth;
+      const height = cachedHeight;
       
       ctx.clearRect(0, 0, width, height);
 

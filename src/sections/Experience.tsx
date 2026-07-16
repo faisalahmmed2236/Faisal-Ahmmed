@@ -261,14 +261,14 @@ export function Experience() {
                     className="relative flex flex-col md:flex-row md:items-start group"
                   >
                     {/* Glowing Node Point */}
-                    <div className="absolute left-6 md:left-1/2 top-4 w-12 h-12 -translate-x-1/2 rounded-full border border-theme-p-500/20 bg-background flex items-center justify-center z-20 group-hover:border-theme-p-500/50 group-hover:shadow-[0_0_15px_rgba(var(--theme-p-500),0.4)] transition-all duration-300">
-                      <div className="w-4 h-4 rounded-full bg-gradient-to-br from-theme-p-400 to-theme-s-500 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    <div className="absolute left-6 md:left-1/2 top-4 w-10 h-10 md:w-12 md:h-12 -translate-x-1/2 rounded-full border border-theme-p-500/20 bg-background flex items-center justify-center z-20 group-hover:border-theme-p-500/50 group-hover:shadow-[0_0_15px_rgba(var(--theme-p-500),0.4)] transition-all duration-300">
+                      <div className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-theme-p-400 to-theme-s-500 flex items-center justify-center">
+                        <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-white animate-pulse" />
                       </div>
                     </div>
 
                     {/* Timeline Box */}
-                    <div className="w-full md:w-[calc(50%-2.5rem)] ml-14 md:ml-0 md:group-odd:mr-auto md:group-even:ml-auto md:group-odd:text-right md:group-even:text-left">
+                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-16 md:ml-0 md:group-odd:mr-auto md:group-even:ml-auto md:group-odd:text-right md:group-even:text-left">
                       
                       <div className={`p-6 md:p-8 rounded-3xl bg-[#09090c]/80 border transition-all duration-500 relative overflow-hidden ${
                         isNodeExpanded 
@@ -691,14 +691,14 @@ export function Experience() {
                     className="relative flex flex-col md:flex-row md:items-start group animate-fade-in"
                   >
                     {/* Glowing Node Point */}
-                    <div className="absolute left-6 md:left-1/2 top-4 w-12 h-12 -translate-x-1/2 rounded-full border border-theme-p-500/20 bg-background flex items-center justify-center z-20 group-hover:border-theme-p-500/50 group-hover:shadow-[0_0_15px_rgba(var(--theme-p-500),0.4)] transition-all duration-300">
-                      <div className="w-4 h-4 rounded-full bg-gradient-to-br from-theme-p-400 to-theme-s-500 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    <div className="absolute left-6 md:left-1/2 top-4 w-10 h-10 md:w-12 md:h-12 -translate-x-1/2 rounded-full border border-theme-p-500/20 bg-background flex items-center justify-center z-20 group-hover:border-theme-p-500/50 group-hover:shadow-[0_0_15px_rgba(var(--theme-p-500),0.4)] transition-all duration-300">
+                      <div className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-theme-p-400 to-theme-s-500 flex items-center justify-center">
+                        <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-white animate-pulse" />
                       </div>
                     </div>
 
                     {/* Timeline Box */}
-                    <div className="w-full md:w-[calc(50%-2.5rem)] ml-14 md:ml-0 md:group-odd:mr-auto md:group-even:ml-auto md:group-odd:text-right md:group-even:text-left">
+                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-16 md:ml-0 md:group-odd:mr-auto md:group-even:ml-auto md:group-odd:text-right md:group-even:text-left">
                       
                       <div className={`p-6 md:p-8 rounded-3xl bg-[#09090c]/80 border transition-all duration-500 relative overflow-hidden ${
                         isNodeExpanded 

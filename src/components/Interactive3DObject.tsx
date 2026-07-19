@@ -238,8 +238,8 @@ export function Interactive3DObject() {
       }
 
       // Smooth hydraulic follow interpolation
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.15;
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.15;
+      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.22;
+      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.22;
 
       const timeSec = timeMs * 0.001;
 
@@ -247,19 +247,19 @@ export function Interactive3DObject() {
       const floatX = Math.sin(timeSec * 0.5) * 35 + Math.cos(timeSec * 0.25) * 15;
       const floatY = Math.cos(timeSec * 0.4) * 25 + Math.sin(timeSec * 0.35) * 10;
       
-      const targetX = width / 2 + floatX + (mouseRef.current.x - width / 2) * 0.4;
-      const targetY = height / 2 + floatY + (mouseRef.current.y - height / 2) * 0.4;
+      const targetX = width / 2 + floatX + (mouseRef.current.x - width / 2) * 0.6;
+      const targetY = height / 2 + floatY + (mouseRef.current.y - height / 2) * 0.6;
 
-      centerX += (targetX - centerX) * 0.25;
-      centerY += (targetY - centerY) * 0.25;
+      centerX += (targetX - centerX) * 0.35;
+      centerY += (targetY - centerY) * 0.35;
 
       // Interactive 3D Camera Tilt based on mouse coords
-      const mouseBiasX = (mouseRef.current.x - width / 2) * 0.0018;
-      const mouseBiasY = (mouseRef.current.y - height / 2) * 0.0018;
+      const mouseBiasX = (mouseRef.current.x - width / 2) * 0.0035;
+      const mouseBiasY = (mouseRef.current.y - height / 2) * 0.0035;
 
       // Progress angles physically scaled by delta-time
-      angleY += (0.6 + Math.sin(timeSec * 0.3) * 0.15) * dt;
-      angleX += (0.35 + Math.cos(timeSec * 0.25) * 0.08) * dt;
+      angleY += (0.8 + Math.sin(timeSec * 0.3) * 0.2) * dt;
+      angleX += (0.5 + Math.cos(timeSec * 0.25) * 0.1) * dt;
 
       const currentAngleY = angleY + mouseBiasX;
       const currentAngleX = angleX + mouseBiasY;

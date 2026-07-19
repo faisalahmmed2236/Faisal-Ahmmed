@@ -13,7 +13,7 @@ export function Testimonials() {
   return (
     <motion.section 
       id="testimonials" 
-      className="py-6 md:py-10 relative overflow-hidden"
+      className="py-6 md:py-10 relative z-10 overflow-visible"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}

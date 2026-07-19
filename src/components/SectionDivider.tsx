@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 
 export const SectionDivider = memo(function SectionDivider() {
   return (
-    <div className="relative h-4 md:h-8 flex items-center justify-center pointer-events-none my-1 md:my-0">
+    <div className="relative h-4 md:h-8 flex items-center justify-center pointer-events-none my-1 md:my-0 z-0 isolate">
       {/* Main horizontal line */}
       <motion.div 
         initial={{ scaleX: 0, opacity: 0 }}

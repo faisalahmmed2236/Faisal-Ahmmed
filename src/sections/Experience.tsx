@@ -170,7 +170,7 @@ export function Experience() {
     <motion.section 
       ref={trackerRef as any}
       id="experience" 
-      className="py-12 md:py-20 px-6 md:px-12 max-w-7xl mx-auto relative overflow-hidden"
+      className="py-12 md:py-20 px-6 md:px-12 max-w-7xl mx-auto relative z-10 overflow-visible"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}

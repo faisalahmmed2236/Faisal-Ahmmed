@@ -42,7 +42,7 @@ export function Hero() {
   }, [x, y]);
 
   return (
-    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <section className="relative z-10 min-h-screen flex items-center pt-20 overflow-hidden">
       {/* Background elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-theme-p-600/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-theme-s-600/20 rounded-full blur-[120px] pointer-events-none" />

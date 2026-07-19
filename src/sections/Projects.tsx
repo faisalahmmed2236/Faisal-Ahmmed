@@ -37,7 +37,7 @@ export function Projects() {
     <motion.section 
       ref={trackerRef as any}
       id="projects" 
-      className="py-6 md:py-10 relative"
+      className="py-6 md:py-10 relative z-10"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}

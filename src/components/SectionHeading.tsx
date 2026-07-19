@@ -33,14 +33,15 @@ export function SectionHeading({ title, subtitle, readTime, tooltipSummary }: Se
     `Overview of the ${title} section.`;
 
   return (
-    <div className="mb-20 text-center relative select-none flex flex-col items-center">
+    <div className="mb-20 text-center relative select-none flex flex-col items-center z-30">
       <div className="flex flex-col items-center gap-6 mb-6 w-full relative">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-theme-p-500/20 blur-[80px] pointer-events-none rounded-full" />
         
         <div 
-          className="relative inline-block pb-4 cursor-help"
+          className="relative inline-block max-w-full px-4 pb-4 cursor-help select-none"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onClick={() => setIsHovered(prev => !prev)}
         >
           {/* Tooltip */}
           <AnimatePresence>
@@ -50,14 +51,14 @@ export function SectionHeading({ title, subtitle, readTime, tooltipSummary }: Se
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-5 py-4 bg-[#0A0A0C]/98 border border-white/10 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-2xl z-50 w-72 text-center flex flex-col gap-2 pointer-events-none"
+                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-5 py-4 bg-[#0A0A0C]/98 border border-white/10 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-2xl z-50 w-[85vw] max-w-[280px] sm:w-72 text-center flex flex-col gap-2 pointer-events-none"
                 style={{ filter: "drop-shadow(0 15px 35px rgba(0,0,0,0.5))" }}
               >
                 <div className="flex items-center justify-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-theme-p-400">
                   <Info size={12} className="animate-pulse" />
                   <span>Section Context</span>
                 </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-sans font-medium">
+                <p className="text-[11px] text-slate-300 leading-relaxed font-sans font-medium whitespace-normal break-words">
                   {summaryText}
                 </p>
                 {/* Micro pointer arrow */}
@@ -67,15 +68,15 @@ export function SectionHeading({ title, subtitle, readTime, tooltipSummary }: Se
               </motion.div>
             )}
           </AnimatePresence>
-
+ 
           <motion.h2 
             initial={{ opacity: 0, y: 35, letterSpacing: '-0.05em', scale: 0.95 }}
             whileInView={{ opacity: 1, y: 0, letterSpacing: '-0.025em', scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" as any }}
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight flex items-center justify-center gap-2"
+            className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight flex flex-wrap items-center justify-center gap-2 max-w-full"
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-200 to-slate-400 font-sans leading-tight drop-shadow-sm">
+            <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-200 to-slate-400 font-sans leading-tight drop-shadow-sm whitespace-normal break-words max-w-full text-center">
               {title}
             </span>
             <motion.span

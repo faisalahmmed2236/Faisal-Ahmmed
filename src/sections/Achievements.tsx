@@ -96,7 +96,7 @@ export function Achievements() {
   return (
     <motion.section 
       id="achievements" 
-      className="py-12 md:py-20 relative bg-black/30 overflow-hidden"
+      className="py-12 md:py-20 relative z-10 bg-black/30 overflow-visible"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}

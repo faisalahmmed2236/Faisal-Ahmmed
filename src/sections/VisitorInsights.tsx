@@ -377,7 +377,7 @@ export function VisitorInsights() {
   return (
     <motion.section 
       id="insights" 
-      className="py-6 md:py-10 relative overflow-hidden"
+      className="py-6 md:py-10 relative z-10 overflow-visible"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
@@ -393,7 +393,7 @@ export function VisitorInsights() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center md:text-left flex flex-col items-center md:items-start relative"
+            className="text-center md:text-left flex flex-col items-center md:items-start relative z-30"
           >
             <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-theme-s-500/10 border border-theme-s-500/20 text-theme-s-400 text-xs font-bold uppercase tracking-widest mb-6">
               <Activity size={14} />
@@ -401,9 +401,10 @@ export function VisitorInsights() {
             </div>
             
             <div 
-              className="relative inline-block cursor-help mb-4"
+              className="relative inline-block cursor-help mb-4 select-none"
               onMouseEnter={() => setIsHeaderHovered(true)}
               onMouseLeave={() => setIsHeaderHovered(false)}
+              onClick={() => setIsHeaderHovered(prev => !prev)}
             >
               {/* Tooltip */}
               <AnimatePresence>
@@ -413,14 +414,14 @@ export function VisitorInsights() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute bottom-full left-1/2 md:left-0 -translate-x-1/2 md:translate-x-0 mb-4 px-4 py-3 bg-[#0B0B0F]/95 border border-theme-s-500/30 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-xl z-50 w-72 text-center md:text-left flex flex-col gap-1.5"
+                    className="absolute bottom-full left-1/2 md:left-0 -translate-x-1/2 md:translate-x-0 mb-4 px-4 py-3 bg-[#0B0B0F]/95 border border-theme-s-500/30 text-slate-200 rounded-2xl shadow-2xl backdrop-blur-xl z-50 w-[85vw] max-w-[280px] sm:w-72 text-center md:text-left flex flex-col gap-1.5"
                     style={{ filter: "drop-shadow(0 10px 25px rgba(236,72,153,0.15))" }}
                   >
                     <div className="flex items-center justify-center md:justify-start gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-theme-s-400">
                       <Info size={11} className="animate-pulse" />
                       <span>Section Details</span>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed font-sans font-medium">
+                    <p className="text-xs text-slate-300 leading-relaxed font-sans font-medium whitespace-normal">
                       An interactive, real-time telemetry panel visualizing user demographics, geographic mapping, and system interest.
                     </p>
                     <div className="absolute top-full left-1/2 md:left-6 -translate-x-1/2 md:translate-x-0 border-x-6 border-x-transparent border-t-6 border-t-[#0B0B0F]/95" />
@@ -428,7 +429,7 @@ export function VisitorInsights() {
                 )}
               </AnimatePresence>
 
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center md:justify-start gap-2">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight flex flex-wrap items-center justify-center md:justify-start gap-2">
                 <span>Visitor <span className="text-transparent bg-clip-text bg-gradient-to-r from-theme-p-400 to-theme-s-400">Insights</span></span>
                 <motion.span
                   animate={{ opacity: isHeaderHovered ? 1 : 0.35, scale: isHeaderHovered ? 1.1 : 1 }}

@@ -14,6 +14,7 @@ import { SectionDivider } from './components/SectionDivider';
 import { useMetaTags } from './hooks/useMetaTags';
 import { ScrollProgress } from './components/ScrollProgress';
 import { CustomCursor } from './components/CustomCursor';
+import { OfflineWarning } from './components/OfflineWarning';
 
 import { ParticleBackground } from './components/ParticleBackground';
 import { AnalyticsProvider } from './context/AnalyticsContext';
@@ -42,10 +43,11 @@ export default function App() {
   
   return (
     <AnalyticsProvider>
-      <div className="min-h-screen bg-background text-foreground selection:bg-theme-p-500/30">
+      <div className="min-h-screen bg-background text-foreground selection:bg-theme-p-500/30 overflow-x-hidden relative w-full">
         <ParticleBackground />
         <CustomCursor />
         <ScrollProgress />
+        <OfflineWarning />
         <Navbar />
         
         <main>

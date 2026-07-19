@@ -37,7 +37,7 @@ export function Skills() {
     <motion.section 
       ref={trackerRef as any}
       id="skills" 
-      className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative"
+      className="py-6 md:py-10 px-6 md:px-12 max-w-7xl mx-auto relative z-10"
       initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-100px" }}

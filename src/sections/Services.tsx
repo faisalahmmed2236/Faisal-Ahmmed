@@ -13,7 +13,7 @@ export function Services() {
   return (
     <motion.section 
       id="services" 
-      className="py-6 md:py-10 relative bg-black/20"
+      className="py-6 md:py-10 relative z-10 bg-black/20"
       initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-100px" }}

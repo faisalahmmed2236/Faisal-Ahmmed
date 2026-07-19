@@ -12,7 +12,7 @@ export function Contact() {
   return (
     <motion.section 
       id="contact" 
-      className="py-10 md:py-16 relative"
+      className="py-10 md:py-16 relative z-10"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
